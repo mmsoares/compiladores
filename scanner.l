@@ -43,8 +43,8 @@ return return KW_RETURN;
   strcpy(stringHelper, yytext);   //usada para não modificar o valor de yytext pois isso pode gerar erros na leitura dos próximos simbolos
   char* unquotedString = removeQuotes(stringHelper);       //remove as aspas no começo e no fim do caracter
 
-  yylval.symbol = hashInsert(unquotedString, LIT_CHAR);   //insere na tabela de simbolos
-  return LIT_CHAR;
+  yylval.symbol = hashInsert(unquotedString, SYMBOL_LIT_CHAR);   //insere na tabela de simbolos
+  return SYMBOL_LIT_CHAR;
 }
 
 \"([^\"])*\" {
@@ -53,30 +53,30 @@ return return KW_RETURN;
   strcpy(stringHelper, yytext);  //usada para não modificar o valor de yytext pois isso pode gerar erros na leitura dos próximos simbolos
   char* unquotedString = removeQuotes(stringHelper);     //remove as aspas no começo e no fim da string
 
-  yylval.symbol = hashInsert(unquotedString, LIT_STRING);  //insere na tabela de simbolos
-  return LIT_STRING;
+  yylval.symbol = hashInsert(unquotedString, SYMBOL_LIT_STRING);  //insere na tabela de simbolos
+  return SYMBOL_LIT_STRING;
 }
 
 [0-9]+ {
   //inteiro
-  yylval.symbol = hashInsert(yytext, LIT_INTEGER);   //insere na tabela de simbolos
-  return LIT_INTEGER;
+  yylval.symbol = hashInsert(yytext, SYMBOL_LIT_INT);   //insere na tabela de simbolos
+  return SYMBOL_LIT_INT;
 }
 
 FALSE {
-  yylval.symbol = hashInsert(yytext, LIT_TRUE);
-  return LIT_FALSE;
+  yylval.symbol = hashInsert(yytext, SYMBOL_LIT_TRUE);
+  return SYMBOL_LIT_FALSE;
 }
 
 TRUE {
-  yylval.symbol = hashInsert(yytext, LIT_FALSE);
-  return LIT_TRUE;
+  yylval.symbol = hashInsert(yytext, SYMBOL_LIT_FALSE);
+  return SYMBOL_LIT_TRUE;
 }
 
 [A-Za-z]([A-Za-z]|[0-9]|"_")* {
   //identificador
-  yylval.symbol = hashInsert(yytext, TK_IDENTIFIER);   //insere na tabela de simbolos
-  return TK_IDENTIFIER;
+  yylval.symbol = hashInsert(yytext, SYMBOL_IDENTIFIER);   //insere na tabela de simbolos
+  return SYMBOL_IDENTIFIER;
 }
 
 \/\/(.)+ {}    //comentarios de linha unica no formato barra barra

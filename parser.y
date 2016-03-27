@@ -13,8 +13,8 @@ extern int isRunning(void);
 #define SYMBOL_LIT_REAL   2;
 #define SYMBOL_LIT_FALSE  3;
 #define SYMBOL_LIT_TRUE   4;
-#define SYMBOL_CHAR       5;
-#define SYMBOL_STRING     6;
+#define SYMBOL_LIT_CHAR   5;
+#define SYMBOL_LIT_STRING 6;
 #define SYMBOL_IDENTIFIER 7;
  
 %}
