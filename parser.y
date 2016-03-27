@@ -41,6 +41,17 @@ extern int isRunning(void);
 
 %%
 
+programa: declaracao ';'' programa
+	     |
+	     ;
+
+declaracao: tipo SYMBOL_IDENTIFIER ':' literal
+		  | tipo SYMBOL_IDENTIFIER '(' parametros ')' command
+	      ;
+
+parametros: tipo literal
+		  | ',' parametros
+
 tipo: KW_INT
     | KW_BOOL
 	| KW_REAL
@@ -57,7 +68,6 @@ literal: SYMBOL_LIT_INT
 
 
 %%
-//c code from here below
 int yyerror(char* str)
 {
 	fflush(stderr);
