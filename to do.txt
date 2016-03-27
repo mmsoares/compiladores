@@ -1,0 +1,10 @@
+Coisas que ainda temos pra fazer:
+
+- Mudar o scanner.y pra botar algum valor no yylval.symbol (acho que OK)
+- Definir quais são os data_types -> KW_INT, KW_REAL, KW_BOOL, KW_CHAR
+- Definir quais são os values -> LIT_INTEGER, LIT_TRUE, LIT_FALSE, LIT_CHAR, LIT_STRING
+
+(...)
+
+- Remover arquivo tokens.h
+- Mudar o Makefile
