@@ -41,16 +41,51 @@ extern int isRunning(void);
 
 %%
 
-programa: declaracao ';'' programa
+programa: declaracao ';' programa
 	     |
 	     ;
 
-declaracao: tipo SYMBOL_IDENTIFIER ':' literal
-		  | tipo SYMBOL_IDENTIFIER '(' parametros ')' command
+declaracao: variavel
+		  | vetor
+		  | funcao
 	      ;
 
-parametros: tipo literal
-		  | ',' parametros
+variavel: tipo SYMBOL_IDENTIFIER ':' literal;
+
+vetor: tipo SYMBOL_IDENTIFIER '[' SYMBOL_LIT_INT ']' valoresvetor;
+
+valoresvetor: ':' listadevalores
+				  |  
+				  ;
+
+listadevalores: literal restodalistadevalores;
+
+restodalistadevalores: ',' listadevalores
+            		 |
+            		 ;
+
+funcao: tipo SYMBOL_IDENTIFIER '(' parametros ')' comando;
+
+parametro: tipo literal
+         |
+         ;
+
+parametros: parametro restodalistadeparametros;
+
+restodalistadeparametros: ',' parametros
+                        |
+                        ;                 
+
+comando: bloco
+	   | atribuicao
+	   | controlefluxo
+	   | entrada
+	   | saida
+	   | retorno
+	   | ';'
+	   ;
+
+bloco: '{' comando '}';
 
 tipo: KW_INT
     | KW_BOOL
