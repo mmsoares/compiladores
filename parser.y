@@ -66,20 +66,25 @@ restodalistadevalores: ',' listadevalores
 
 funcao: tipo SYMBOL_IDENTIFIER '(' parametros ')' comando;
 
-parametro: tipo literal
-         |
+parametro: tipo SYMBOL_IDENTIFIER
          ;
 
-parametros: parametro restodalistadeparametros;
+parametros: listaparametros
+				|				
+				;
+				
+listaparametros: parametro ',' listaparametros
+					| parametro
+					;
 
 restodalistadeparametros: ',' parametros
                         |
                         ;                 
 
 comandos:	comando ';' comandos
-		| comando 
-		| bloco
-		;
+			| comando 
+			| bloco
+			;
 		
 comando: bloco
 	   | atribuicao
@@ -109,26 +114,22 @@ expressao:	SYMBOL_IDENTIFIER
 		| expressao OPERATOR_NE expressao
 		| expressao OPERATOR_AND expressao
 		| expressao OPERATOR_OR expressao
-		| '*' SYMBOL_IDENTIFIER	
-		| '&' SYMBOL_IDENTIFIER
 		;
 		
 atribuicao: SYMBOL_IDENTIFIER '=' expressao
 			|	SYMBOL_IDENTIFIER'[' expressao ']' = expressao
 		;
 		
-controlefluxo:	KW_IF expressao KW_LOOP comando
-		| KW_IF expressao KW_LOOP comando
-		| KW_IF expressao KW_THEN comando
-		| KW_IF expressao KW_THEN comando KW_ELSE comando
-		| KW_IF expressao KW_ELSE comando
-		;
+controlefluxo:	KW_IF '(' expressao ')' comando
+				| KW_IF '(' expressao ')' comando KW_ELSE comando
+				| KW_WHILE '(' expressao ')' comando
+				;
 
-input: SYMBOL_IDENTIFIER listadevariaveis
+input: KW_INPUT listadevariaveis
 		;
 		
 listadevariaveis: SYMBOL_IDENTIFIER restolistadevariaveis
-;
+						;
 
 restolistadevariaveis:  ',' listadevariaveis
                         |
@@ -138,7 +139,7 @@ output: 	KW_OUTPUT listadeelementos
 		;		
 
 listadeelementos: expressao restolistadeelementos
-						|	SYMBOL_IDENTIFIER restolistadeelementos
+						|	SYMBOL_LIT_STRING restolistadeelementos
 ;
 
 restolistadeelementos:  ',' listadeelementos
