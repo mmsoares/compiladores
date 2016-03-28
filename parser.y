@@ -117,7 +117,7 @@ expressao:	SYMBOL_IDENTIFIER
 		;
 		
 atribuicao: SYMBOL_IDENTIFIER '=' expressao
-			|	SYMBOL_IDENTIFIER'[' expressao ']' = expressao
+			|	SYMBOL_IDENTIFIER'[' expressao ']' '=' expressao
 		;
 		
 controlefluxo:	KW_IF '(' expressao ')' comando
