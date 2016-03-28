@@ -1,20 +1,16 @@
-etapa1: lex.yy.o hash.o
-	gcc lex.yy.o hash.o -o etapa1
+LEX     = flex
+YACC    = yacc -y
+YFLAGS  = -d
+objects = scan.o parser.o main.o
 
-lex.yy.c: scanner.l
-	flex --header-file=lex.yy.h scanner.l
+etapa2: $(objects)
 
-lex.yy.o: lex.yy.c
-	gcc -c lex.yy.c
+scan.o: scanner.l parser.c
 
-hash.o: hash.c
-	gcc -c hash.c
+parser.o: parser.y
 
 main.o: main.c
-	gcc -c main.c
 
 clean:
 	rm -rf *.o
-	rm -rf lex.yy.*
-	rm -rf y.tab.*
-	rm ./etapa1
+	rm ./etapa2
