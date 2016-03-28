@@ -1,14 +1,19 @@
-int main(){
- 
- int tok;
+#include <stdio.h>
+#include "hash.h"
+#include "y.tab.h"
 
- hashInit();
- printf("Hash initialized\n");
+extern int isRunning(void);
 
- while(isRunning()){
-  tok = yylex();
-  printf("LINE: [%d] - TEXT: [%s] - TOKEN: [%d]\n", getLineNumber(), yytext, tok);
- }
- printf("going to print the hash\n");
- hashPrint();
+int main()
+{	
+	initMe();
+
+	while (isRunning())
+	{
+		yyparse();
+	}
+
+   	hashPrint();
+
+	return 0;
 }
