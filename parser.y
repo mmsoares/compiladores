@@ -76,16 +76,78 @@ restodalistadeparametros: ',' parametros
                         |
                         ;                 
 
+comandos:	comando ';' comandos
+		| comando 
+		| bloco
+		;
+		
 comando: bloco
 	   | atribuicao
 	   | controlefluxo
-	   | entrada
-	   | saida
-	   | retorno
+	   | input
+	   | output
+	   | return
 	   | ';'
 	   ;
 
-bloco: '{' comando '}';
+bloco: '{' comandos '}';
+
+expressao:	SYMBOL_IDENTIFIER
+		| SYMBOL_IDENTIFIER '[' expressao ']'
+		| SYMBOL_IDENTIFIER '(' parametros ')'
+		| literal
+		| '(' expressao ')'
+		| expressao '+' expressao
+		| expressao '-' expressao
+		| expressao '*' expressao
+		| expressao '/' expressao
+		| expressao '<' expressao
+		| expressao '>' expressao
+		| expressao OPERATOR_LE expressao
+		| expressao OPERATOR_GE expressao
+		| expressao OPERATOR_EQ expressao
+		| expressao OPERATOR_NE expressao
+		| expressao OPERATOR_AND expressao
+		| expressao OPERATOR_OR expressao
+		| '*' SYMBOL_IDENTIFIER	
+		| '&' SYMBOL_IDENTIFIER
+		;
+		
+atribuicao: SYMBOL_IDENTIFIER '=' expressao
+			|	SYMBOL_IDENTIFIER'[' expressao ']' = expressao
+		;
+		
+controlefluxo:	KW_IF expressao KW_LOOP comando
+		| KW_IF expressao KW_LOOP comando
+		| KW_IF expressao KW_THEN comando
+		| KW_IF expressao KW_THEN comando KW_ELSE comando
+		| KW_IF expressao KW_ELSE comando
+		;
+
+input: SYMBOL_IDENTIFIER listadevariaveis
+		;
+		
+listadevariaveis: SYMBOL_IDENTIFIER restolistadevariaveis
+;
+
+restolistadevariaveis:  ',' listadevariaveis
+                        |
+                        ; 
+                        
+output: 	KW_OUTPUT listadeelementos
+		;		
+
+listadeelementos: expressao restolistadeelementos
+						|	SYMBOL_IDENTIFIER restolistadeelementos
+;
+
+restolistadeelementos:  ',' listadeelementos
+                        |
+                        ; 
+
+return: KW_RETURN expressao
+		;
+
 
 tipo: KW_INT
     | KW_BOOL
