@@ -1,7 +1,6 @@
 %{
 int running = 1;
 int lineNumber = 1;
-#include "tokens.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
