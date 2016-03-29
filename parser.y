@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "hash.h"
 
+#define YYDEBUG 1
 int yydebug = 1;
 
 %}
@@ -29,7 +30,7 @@ int yydebug = 1;
 %token OPERATOR_AND	274
 %token OPERATOR_OR	275
  
-%token TOKEN_ERROR		290
+%token TOKEN_ERROR  290
 
 %token <symbol> LIT_INT
 %token <symbol> LIT_REAL
@@ -62,12 +63,14 @@ declaracao: variavel
 variavel: tipo TK_IDENTIFIER ':' literal;
 
 vetor: tipo TK_IDENTIFIER '[' LIT_INT ']'
-	|  tipo TK_IDENTIFIER '[' LIT_INT ']' ':' literal listavalores
-	;
+     | tipo TK_IDENTIFIER '[' LIT_INT ']' ':' inicializacaovetor
+     ;
 
-listavalores: ',' literal
-			|
-			;
+inicializacaovetor: literal listaliterais;
+
+listaliterais: literal listaliterais
+	     |
+             ;
 
 funcao: tipo TK_IDENTIFIER '(' parametros ')' comando;
 
