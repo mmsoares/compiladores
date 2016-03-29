@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #include "hash.h"
 
-//#define YYDEBUG 1
-//int yydebug = 1;
+int yydebug = 1;
 
 %}
 
@@ -32,7 +31,8 @@
  
 %token TOKEN_ERROR		290
 
-%token <symbol> LIT_INTEGER
+%token <symbol> LIT_INT
+%token <symbol> LIT_REAL
 %token <symbol> LIT_FALSE
 %token <symbol> LIT_TRUE
 %token <symbol> LIT_CHAR
@@ -59,23 +59,19 @@ declaracao: variavel
 		  | funcao
 	      ;
 
-variavel: tipo SYMBOL_IDENTIFIER ':' literal;
+variavel: tipo TK_IDENTIFIER ':' literal;
 
-vetor: tipo SYMBOL_IDENTIFIER '[' SYMBOL_LIT_INT ']' valoresvetor;
+vetor: tipo TK_IDENTIFIER '[' LIT_INT ']'
+	|  tipo TK_IDENTIFIER '[' LIT_INT ']' ':' literal listavalores
+	;
 
-valoresvetor: ':' listadevalores
-				  |  
-				  ;
+listavalores: ',' literal
+			|
+			;
 
-listadevalores: literal restodalistadevalores;
+funcao: tipo TK_IDENTIFIER '(' parametros ')' comando;
 
-restodalistadevalores: ',' listadevalores
-            		 |
-            		 ;
-
-funcao: tipo SYMBOL_IDENTIFIER '(' parametros ')' comando;
-
-parametro: tipo SYMBOL_IDENTIFIER
+parametro: tipo TK_IDENTIFIER
          ;
 
 parametros: listaparametros
@@ -106,9 +102,9 @@ comando: bloco
 
 bloco: '{' comandos '}';
 
-expressao:	SYMBOL_IDENTIFIER
-		| SYMBOL_IDENTIFIER '[' expressao ']'
-		| SYMBOL_IDENTIFIER '(' parametros ')'
+expressao:	TK_IDENTIFIER
+		| TK_IDENTIFIER '[' expressao ']'
+		| TK_IDENTIFIER '(' parametros ')'
 		| literal
 		| '(' expressao ')'
 		| expressao '+' expressao
@@ -125,8 +121,8 @@ expressao:	SYMBOL_IDENTIFIER
 		| expressao OPERATOR_OR expressao
 		;
 		
-atribuicao: SYMBOL_IDENTIFIER '=' expressao
-			|	SYMBOL_IDENTIFIER'[' expressao ']' '=' expressao
+atribuicao: TK_IDENTIFIER '=' expressao
+			|	TK_IDENTIFIER'[' expressao ']' '=' expressao
 		;
 		
 controlefluxo:	KW_IF '(' expressao ')' comando
@@ -137,7 +133,7 @@ controlefluxo:	KW_IF '(' expressao ')' comando
 input: KW_INPUT listadevariaveis
 		;
 		
-listadevariaveis: SYMBOL_IDENTIFIER restolistadevariaveis
+listadevariaveis: TK_IDENTIFIER restolistadevariaveis
 						;
 
 restolistadevariaveis:  ',' listadevariaveis
@@ -148,7 +144,7 @@ output: 	KW_OUTPUT listadeelementos
 		;		
 
 listadeelementos: expressao restolistadeelementos
-						|	SYMBOL_LIT_STRING restolistadeelementos
+						|	LIT_STRING restolistadeelementos
 ;
 
 restolistadeelementos:  ',' listadeelementos
@@ -165,12 +161,12 @@ tipo: KW_INT
 	| KW_CHAR
 	;
 
-literal: SYMBOL_LIT_INT
-	   | SYMBOL_LIT_REAL
-       | SYMBOL_LIT_TRUE
-       | SYMBOL_LIT_FALSE
-       | SYMBOL_LIT_CHAR
-       | SYMBOL_LIT_STRING
+literal: LIT_INT
+	   | LIT_REAL
+       | LIT_TRUE
+       | LIT_FALSE
+       | LIT_CHAR
+       | LIT_STRING
        ;
 
 

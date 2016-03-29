@@ -47,7 +47,7 @@ return return KW_RETURN;
   char* unquotedString = removeQuotes(stringHelper);       //remove as aspas no começo e no fim do caracter
 
   yylval.symbol = hashInsert(unquotedString, SYMBOL_LIT_CHAR);   //insere na tabela de simbolos
-  return SYMBOL_LIT_CHAR;
+  return LIT_CHAR;
 }
 
 \"([^\"])*\" {
@@ -57,29 +57,29 @@ return return KW_RETURN;
   char* unquotedString = removeQuotes(stringHelper);     //remove as aspas no começo e no fim da string
 
   yylval.symbol = hashInsert(unquotedString, SYMBOL_LIT_STRING);  //insere na tabela de simbolos
-  return SYMBOL_LIT_STRING;
+  return LIT_STRING;
 }
 
 [0-9]+ {
   //inteiro
   yylval.symbol = hashInsert(yytext, SYMBOL_LIT_INT);   //insere na tabela de simbolos
-  return SYMBOL_LIT_INT;
+  return LIT_INT;
 }
 
 FALSE {
   yylval.symbol = hashInsert(yytext, SYMBOL_LIT_TRUE);
-  return SYMBOL_LIT_FALSE;
+  return LIT_FALSE;
 }
 
 TRUE {
   yylval.symbol = hashInsert(yytext, SYMBOL_LIT_FALSE);
-  return SYMBOL_LIT_TRUE;
+  return LIT_TRUE;
 }
 
 [A-Za-z]([A-Za-z]|[0-9]|"_")* {
   //identificador
   yylval.symbol = hashInsert(yytext, SYMBOL_IDENTIFIER);   //insere na tabela de simbolos
-  return SYMBOL_IDENTIFIER;
+  return TK_IDENTIFIER;
 }
 
 \/\/(.)+ {}    //comentarios de linha unica no formato barra barra
