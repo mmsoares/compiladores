@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include "hash.h"
 
-//#define YYDEBUG 1
-//int yydebug = 1;
+#define YYDEBUG 1
+int yydebug = 1;
 
 %}
 
@@ -61,17 +61,15 @@ declaracao: variavel
 
 variavel: tipo SYMBOL_IDENTIFIER ':' literal;
 
-vetor: tipo SYMBOL_IDENTIFIER '[' SYMBOL_LIT_INT ']' valoresvetor;
+vetor: tipo SYMBOL_IDENTIFIER '[' SYMBOL_LIT_INT ']'
+     | tipo SYMBOL_IDENTIFIER '[' SYMBOL_LIT_INT ']' ':' inicializacaovetor
+     ;
 
-valoresvetor: ':' listadevalores
-				  |  
-				  ;
+inicializacaovetor: literal listaliterais;
 
-listadevalores: literal restodalistadevalores;
-
-restodalistadevalores: ',' listadevalores
-            		 |
-            		 ;
+listaliterais: literal listaliterais
+	     |
+             ;
 
 funcao: tipo SYMBOL_IDENTIFIER '(' parametros ')' comando;
 
