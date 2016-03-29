@@ -1,13 +1,17 @@
 %{
 int running = 1;
 int lineNumber = 1;
+
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include "hash.h"
+#include "y.tab.h"
 
 char *removeQuotes(char *string);
 void initMe(void);
+int getLineNumber();
+int isRunning();
+
 %}
 
 %x COMM
@@ -113,5 +117,3 @@ int getLineNumber(void){
 void initMe(void){
   hashInit();
 }
-
-#include "main.c"

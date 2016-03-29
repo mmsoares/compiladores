@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "hash.h"
-#include "y.tab.h"
-
-extern int isRunning(void);
+ 
+extern int isRunning();
+extern int getLineNumber();
+extern void initMe();
 
 int main()
 {	

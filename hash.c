@@ -6,7 +6,7 @@
 
 //implementação das funções como visto em aula
 
-HASH_NODE *Table[HASH_SIZE];
+
 
 void hashInit(void){
 	int i;

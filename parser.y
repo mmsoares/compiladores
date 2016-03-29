@@ -5,19 +5,12 @@
 
 //#define YYDEBUG 1
 //int yydebug = 1;
- 
-extern int getLineNumber(void);
-extern int isRunning(void);
 
-#define SYMBOL_LIT_INT    1;
-#define SYMBOL_LIT_REAL   2;
-#define SYMBOL_LIT_FALSE  3;
-#define SYMBOL_LIT_TRUE   4;
-#define SYMBOL_LIT_CHAR   5;
-#define SYMBOL_LIT_STRING 6;
-#define SYMBOL_IDENTIFIER 7;
- 
 %}
+
+%union {
+	HASH_NODE *symbol;
+}
 
 %token KW_INT		256
 %token KW_REAL		258
@@ -38,6 +31,22 @@ extern int isRunning(void);
 %token OPERATOR_OR	275
  
 %token TOKEN_ERROR		290
+
+%token <symbol> LIT_INTEGER
+%token <symbol> LIT_FALSE
+%token <symbol> LIT_TRUE
+%token <symbol> LIT_CHAR
+%token <symbol> LIT_STRING
+%token <symbol> TK_IDENTIFIER
+
+%left LIT_FALSE LIT_TRUE OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_NE '>' '<'  LIT_CHAR 
+%left OPERATOR_OR
+%left OPERATOR_AND
+%left '+' '-'
+%left '*' '/' 
+%left ','
+%left ')' ']' 
+%nonassoc '!' '$' '&'
 
 %%
 
@@ -169,7 +178,7 @@ literal: SYMBOL_LIT_INT
 int yyerror(char* str)
 {
 	fflush(stderr);
-	fprintf(stderr,"Erro: \"%s\"\t na linha: %d\n", str, getLineNumber());
+	fprintf(stderr,"Erro na linha: %d\n", getLineNumber());
 	exit(3);
 }
 
