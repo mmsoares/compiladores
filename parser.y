@@ -89,7 +89,7 @@ restodalistadeparametros: ',' parametros
                         |
                         ;                 
 
-comandos:	comando ';' comandos
+comandos:	comando comandos
 			| comando 
 			| bloco
 			;
@@ -105,9 +105,25 @@ comando: bloco
 
 bloco: '{' comandos '}';
 
+parametrochamada: TK_IDENTIFIER
+						| literal
+         			;
+
+parametroschamada: listaparametroschamada
+				|				
+				;
+				
+listaparametroschamada: parametrochamada ',' listaparametroschamada
+					| parametrochamada
+					;
+
+restodalistadeparametroschamada: ',' parametroschamada
+                        |
+                        ;
+
 expressao:	TK_IDENTIFIER
 		| TK_IDENTIFIER '[' expressao ']'
-		| TK_IDENTIFIER '(' parametros ')'
+		| TK_IDENTIFIER '(' parametroschamada ')'
 		| literal
 		| '(' expressao ')'
 		| expressao '+' expressao
