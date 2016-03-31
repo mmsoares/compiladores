@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "hash.h"
 
-#define YYDEBUG 1
+#define YYDEBUG 0
 int yydebug = 1;
 
 %}
@@ -105,17 +105,13 @@ comando: bloco
 
 bloco: '{' comandos '}';
 
-parametrochamada: TK_IDENTIFIER
-						| literal
-         			;
-
 parametroschamada: listaparametroschamada
 				|				
 				;
 				
-listaparametroschamada: parametrochamada ',' listaparametroschamada
-					| parametrochamada
-					;
+listaparametroschamada: expressao ',' listaparametroschamada
+		      | expressao
+		      ;
 
 restodalistadeparametroschamada: ',' parametroschamada
                         |

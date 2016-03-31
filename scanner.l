@@ -82,7 +82,7 @@ TRUE {
   return TK_IDENTIFIER;
 }
 
-\/\/(.)+ {}    //comentarios de linha unica no formato barra barra
+\/\/(.)* {}    //comentarios de linha unica no formato barra barra
 
 "/*"			{ BEGIN(COMM); }   //comentarios com multiplas linhas no formato barra asterisco (texto ...) asterisco barra
 <COMM>"*/"    { BEGIN(INITIAL); }
