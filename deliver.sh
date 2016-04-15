@@ -11,6 +11,15 @@
 #    - Cria um arquivo <nome da etapa>.tgz com o conteúdo da pasta para
 #		 posterior entrega.
 
+if [ $# -eq 0 ]
+  then
+    echo "Você deve fornecer um argumento com o nome da tag a ser criada"
+    echo "Por exemplo: "
+    echo "     ./deliver etapa1"
+    exit
+fi
+
+
 git tag -d $1
 git push origin :refs/tags/$1
 git tag $1

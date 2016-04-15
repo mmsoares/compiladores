@@ -1,9 +1,11 @@
-etapa2: clean y.tab.o lex.yy.o main.o hash.o
-	gcc -o etapa2 y.tab.o lex.yy.o main.o hash.o
+etapa3: clean y.tab.o lex.yy.o main.o hash.o astree.o
+	gcc -o etapa2 y.tab.o lex.yy.o main.o hash.o astree.o
 main.o: main.c lex.yy.c
 	gcc -c main.c
 hash.o: hash.c
 	gcc -c hash.c
+astree.o: astree.c
+	gcc -c astree.c
 lex.yy.o: lex.yy.c
 	gcc -c lex.yy.c
 lex.yy.c: scanner.l
@@ -16,4 +18,4 @@ y.tab.h: parser.y
 	yacc -d -v parser.y
 		
 clean:
-	rm -rf *.o lex.yy.* y.tab.* y.output etapa2
+	rm -rf *.o lex.yy.* y.tab.* y.output etapa3
