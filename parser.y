@@ -2,12 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "hash.h"
+#include "astree.h"
 
 #define YYDEBUG 0
 int yydebug = 1;
 %}
 
 %union {
+    ASTREE    *ast;  
     HASH_NODE *symbol;
 }
 
@@ -62,6 +64,7 @@ int yydebug = 1;
 %type <ast> listaliterais
 %type <ast> funcao
 %type <ast> parametro
+%type <ast> parametros
 %type <ast> listaparametros
 %type <ast> restodalistadeparametros
 %type <ast> comandos

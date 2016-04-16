@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include    "hash.h"
+#include "hash.h"
 
 #ifndef     ASTREE_HEADER
 #define     ASTREE_HEADER
@@ -15,6 +14,7 @@
 #define AST_FUNCAO 		106
 #define AST_PARAMETRO 		107
 #define AST_LISTA_PARAMETRO 	108
+#define AST_COMANDOS		144
 #define AST_LISTA_PARAM_CHAMADA 109
 #define AST_ACESSO_VETOR 	110
 #define AST_CHAMADA_FUNCAO 	111
@@ -45,6 +45,7 @@
 #define AST_KW_BOOL 		136
 #define AST_KW_REAL 		137
 #define AST_KW_CHAR 		138
+#define AST_LIT_INT		145
 #define AST_LIT_REAL 		139
 #define AST_LIT_TRUE 		140
 #define AST_LIT_FALSE 		141
@@ -53,13 +54,13 @@
 
 
 
-typedef struct astree_node {
+typedef struct astree_node_struct {
     int type;
     HASH_NODE* symbol;
-    struct ast_node *son[MAX_SONS];
+    struct astree_node_struct *son[MAX_SONS];
 } ASTREE;
 
-FILE    *input;
+FILE    *inputFile;
 FILE    *outputFile;
 
 ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *s0, ASTREE *s1, ASTREE *s2, ASTREE *s3);

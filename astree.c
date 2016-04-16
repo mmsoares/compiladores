@@ -1,4 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "astree.h"
+#include "hash.h"
 
 ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *son0, ASTREE *son1, ASTREE *son2, ASTREE *son3) {
 	ASTREE *newnode = 0;
@@ -40,3 +44,4 @@ void astreePrint(ASTREE* node, int level) {
 void decompile(ASTREE *root) {
 
 }
+
