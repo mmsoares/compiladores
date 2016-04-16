@@ -1,3 +1,6 @@
+#ifndef HEADER_HASH
+#define HEADER_HASH
+
 #define SYMBOL_LIT_INT 1
 #define SYMBOL_LIT_FLOAT 2
 #define SYMBOL_LIT_TRUE 3
@@ -24,3 +27,5 @@ int hashAddress(char *text);
 HASH_NODE *hashFind(char *text);
 HASH_NODE *hashInsert(char *text, int type);
 void hashPrint(void);
+
+#endif

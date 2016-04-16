@@ -44,11 +44,12 @@ HASH_NODE *hashInsert(char *text, int type){
 	strcpy(newnode->text,text);
 	newnode->next = Table[address];
 	Table[address] = newnode;
+
+	return newnode;
 	
 }
 
 void hashPrint(void){
-	
 	int i;
 	HASH_NODE *node = 0;
 	for(i=0;i<HASH_SIZE;i++)

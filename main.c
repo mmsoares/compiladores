@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "astree.h"
 #include "hash.h"
 #include "y.tab.h"
 #include "lex.yy.h"
@@ -7,6 +8,8 @@
 extern int isRunning();
 extern int getLineNumber();
 extern void initMe();
+
+// NOSSO
 
 int main(int argc, char **argv)
 {	
@@ -22,9 +25,9 @@ int main(int argc, char **argv)
 		fprintf(stderr, "ERRO! Nao foi possivel abrir este arquivo.\n");
 		exit (1);
 	}
-
+	outputFile = fopen(argv[2], "w");
 	yyparse();
    	hashPrint();
-
+	fclose(outputFile);
 	return 0;
 }

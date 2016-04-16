@@ -5,6 +5,7 @@ int lineNumber = 1;
 #include <string.h>
 #include <stdio.h>
 #include "hash.h"
+#include "astree.h"
 #include "y.tab.h"
 
 char *removeQuotes(char *string);
