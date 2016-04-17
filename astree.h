@@ -55,7 +55,7 @@
 #define AST_LIT_STRING 		143
 #define AST_IDENTIFIER      148
 #define AST_DECLARACOES     149
-
+#define AST_COMANDO_VAZIO 150
 
 
 typedef struct astree_struct {

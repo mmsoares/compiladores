@@ -85,12 +85,12 @@ TRUE {
 
 \/\/(.)* {}    //comentarios de linha unica no formato barra barra
 
-"/*"			{ BEGIN(COMM); }   //comentarios com multiplas linhas no formato barra asterisco (texto ...) asterisco barra
+"/*"      { BEGIN(COMM); }   //comentarios com multiplas linhas no formato barra asterisco (texto ...) asterisco barra
 <COMM>"*/"    { BEGIN(INITIAL); }
 <COMM>"\n"    { ++lineNumber;  }
 <COMM>.       { }
 
-.		 { return TOKEN_ERROR; }
+.    { return TOKEN_ERROR; }
 
 %%
 //rotina que remove o primeiro e o último caracter de uma string - usada para remover as aspas de strings e caracteres

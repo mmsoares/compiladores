@@ -9,12 +9,13 @@ extern  FILE    *outputFile;
 ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *son0, ASTREE *son1, ASTREE *son2, ASTREE *son3) {
 	ASTREE *newnode = 0;
 	newnode = (ASTREE*) calloc(1,sizeof(ASTREE));
-	newnode->type = type;
 	newnode->symbol = symbol;
+	newnode->type = type;
 	newnode->son[0] = son0;
 	newnode->son[1] = son1;
 	newnode->son[2] = son2;
 	newnode->son[3] = son3;
+
 
 	return newnode;
 }
@@ -77,6 +78,7 @@ void astreePrint(ASTREE* node, int level) {
 		case AST_LIT_STRING: 	fprintf(stderr,"AST_LIT_STRING"); break;
 		case AST_BLOCO:			fprintf(stderr,"AST_BLOCO"); break;
 		case AST_IDENTIFIER:    fprintf(stderr, "AST_IDENTIFIER"); break;
+		case AST_COMANDO_VAZIO:    fprintf(stderr, "AST_COMANDO_VAZIO"); break;
 
 		default: fprintf(stderr, "UNKNOWN"); 
 				 fprintf(stderr, "Node type: %d\n", node->type);
@@ -163,6 +165,10 @@ void decompile(ASTREE *raiz) {
 				decompile(raiz->son[1]);
 				break;
 			
+			case AST_COMANDO_VAZIO:
+				fprintf(outputFile," ; ");
+				break;
+				
 			case AST_BLOCO:
 				fprintf(outputFile," { ");
 				decompile(raiz->son[0]);
@@ -310,12 +316,20 @@ void decompile(ASTREE *raiz) {
 				break;
 
 			case AST_LISTA_ELEM_EXP:
+				
 				decompile(raiz->son[0]);
+				if(raiz->son[1]){
+					fprintf(outputFile," , ");
+				}
 				decompile(raiz->son[1]);
+				
 				break;
 
 			case AST_LISTA_ELEM_STRING:
-				fprintf(outputFile," %s ",raiz->symbol->text);
+				fprintf(outputFile," \"%s\" ",raiz->symbol->text);
+				if(raiz->son[0]){
+					fprintf(outputFile," , ");
+				}
 				decompile(raiz->son[0]);
 				break;
 
@@ -357,11 +371,11 @@ void decompile(ASTREE *raiz) {
 				break;
 
 			case AST_LIT_CHAR:
-				fprintf(outputFile," %s ",raiz->symbol->text);
+				fprintf(outputFile," \'%s\' ",raiz->symbol->text);
 				break;
 
 			case AST_LIT_STRING:
-				fprintf(outputFile," %s ",raiz->symbol->text);
+				fprintf(outputFile," \"%s\" ",raiz->symbol->text);
 				break;
 
 			case AST_IDENTIFIER:

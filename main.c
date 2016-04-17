@@ -9,8 +9,6 @@ extern int isRunning();
 extern int getLineNumber();
 extern void initMe();
 
-// NOSSO
-
 int main(int argc, char **argv)
 {	
 	initMe();
