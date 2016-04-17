@@ -170,7 +170,7 @@ restodalistadeparametroschamada: ',' parametroschamada	{$$=$2;}
 
 expressao:  TK_IDENTIFIER				{$$ = astreeCreate(AST_IDENTIFIER,$1,0,0,0,0);}
         | TK_IDENTIFIER '[' expressao ']'		{$$ = astreeCreate(AST_ACESSO_VETOR,0,$1,$3,0,0);}
-        | TK_IDENTIFIER '(' parametroschamada ')'	{$$ = astreeCreate(AST_CHAMADA_FUNCAO,0,$1,$3,0,0);}
+        | TK_IDENTIFIER '(' parametroschamada ')'	{$$ = astreeCreate(AST_CHAMADA_FUNCAO,$1,$3,0,0,0);}
         | literal					{$$=$1;}
         | '(' expressao ')'				{$$ = astreeCreate(AST_EXPRESSAO_PARENTESES,0,$2,0,0,0);}
         | expressao '+' expressao			{$$ = astreeCreate(AST_OP_SOMA,0,$1,$3,0,0);}
