@@ -71,12 +71,15 @@ void astreePrint(ASTREE* node, int level) {
 		case AST_LIT_INT: 		fprintf(stderr,"AST_LIT_INT"); break;
 		case AST_LIT_REAL: 		fprintf(stderr,"AST_LIT_REAL"); break;
 		case AST_LIT_TRUE: 		fprintf(stderr,"AST_LIT_TRUE"); break;
-		case AST_LIT_FALSE: 		fprintf(stderr,"AST_LIT_FALSE"); break;
+		case AST_LIT_FALSE: 	fprintf(stderr,"AST_LIT_FALSE"); break;
 		case AST_LIT_CHAR: 		fprintf(stderr,"AST_LIT_CHAR"); break;
-		case AST_LIT_STRING: 		fprintf(stderr,"AST_LIT_STRING"); break;
+		case AST_LIT_STRING: 	fprintf(stderr,"AST_LIT_STRING"); break;
+		case AST_BLOCO:			fprintf(stderr,"AST_BLOCO"); break;
+		case AST_IDENTIFIER:    fprintf(stderr, "AST_IDENTIFIER"); break;
 
-		//adicionar CASES
-		default: fprintf(stderr, "UNKNOWN"); break;
+		default: fprintf(stderr, "UNKNOWN"); 
+				 fprintf(stderr, "Node type: %d\n", node->type);
+				 break;
 	}
 	if(node->symbol) {
 		fprintf(stderr, ",%s", node->symbol->text);
@@ -357,6 +360,9 @@ void decompile(ASTREE *raiz) {
 				fprintf(outputFile," %s ",raiz->symbol->text);
 				break;
 
+			case AST_IDENTIFIER:
+				fprintf(outputFile, " %s ", raiz->symbol->text);
+				break;
 			default:		 
 				fprintf(stderr,"Fim da execucao do Decompile!"); 
 				break;      

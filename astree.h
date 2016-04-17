@@ -53,6 +53,7 @@
 #define AST_LIT_FALSE 		141
 #define AST_LIT_CHAR 		142
 #define AST_LIT_STRING 		143
+#define AST_IDENTIFIER      148
 
 
 

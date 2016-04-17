@@ -168,7 +168,7 @@ restodalistadeparametroschamada: ',' parametroschamada	{$$=$2;}
 
 
 
-expressao:  TK_IDENTIFIER				{$$=$1;}
+expressao:  TK_IDENTIFIER				{$$ = astreeCreate(AST_IDENTIFIER,$1,0,0,0,0);}
         | TK_IDENTIFIER '[' expressao ']'		{$$ = astreeCreate(AST_ACESSO_VETOR,0,$1,$3,0,0);}
         | TK_IDENTIFIER '(' parametroschamada ')'	{$$ = astreeCreate(AST_CHAMADA_FUNCAO,0,$1,$3,0,0);}
         | literal					{$$=$1;}
