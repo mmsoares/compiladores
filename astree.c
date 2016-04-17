@@ -29,6 +29,7 @@ void astreePrint(ASTREE* node, int level) {
 
 	switch(node->type) {
 		case AST_PROGRAMA: 		fprintf(stderr,"AST_PROGRAMA"); break;
+		case AST_DECLARACOES:   fprintf(stderr, "DECLARACOES"); break;
 		case AST_VARIAVEL: 		fprintf(stderr,"AST_VARIAVEL"); break;
 		case AST_VETOR_VAZIO: 		fprintf(stderr,"AST_VETOR_VAZIO"); break;
 		case AST_VETOR: 		fprintf(stderr,"AST_VETOR"); break;
@@ -97,11 +98,14 @@ void decompile(ASTREE *raiz) {
 	{
 	    switch(raiz->type)
 	    {	
-	
 			case AST_PROGRAMA:	
 				decompile(raiz->son[0]);
-				fprintf(outputFile," ; ");
-				decompile(raiz->son[1]); 
+				break;
+
+			case AST_DECLARACOES:
+				decompile(raiz->son[0]);
+				fprintf(outputFile, " ; ");
+				decompile(raiz->son[1]);
 				break;
 		
 			case AST_VARIAVEL:	

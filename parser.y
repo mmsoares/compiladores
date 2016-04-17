@@ -57,6 +57,7 @@ int yydebug = 1;
 
 
 %type <ast> programa
+%type <ast> declaracoes
 %type <ast> declaracao
 %type <ast> variavel
 %type <ast> vetor
@@ -91,13 +92,17 @@ int yydebug = 1;
 
 %%
 
-programa: declaracao ';' programa     { 
-					  $$ = astreeCreate(AST_PROGRAMA,0,$1,$3,0,0);
+programa: declaracoes     { 
+					  $$ = astreeCreate(AST_PROGRAMA,0,$1,0,0,0);
 					  astreePrint ($$,0);
 					  decompile($$);
 				      }
-         |                            {  $$=0; }
+         |            {  $$=astreeCreate(AST_PROGRAMA,0,0,0,0,0); }
          ;
+
+declaracoes: declaracao ';' declaracoes {$$=astreeCreate(AST_DECLARACOES,0,$1,$3,0,0);}
+            |                           {$$=0;}
+            ;
 
 declaracao: variavel {$$=$1;}
           | vetor    {$$=$1;}
