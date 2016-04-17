@@ -15,6 +15,6 @@ y.tab.o: y.tab.c
 y.tab.c: y.tab.h
 	yacc parser.y
 y.tab.h: parser.y
-	yacc -d -v parser.y --warnings=none
+	yacc -d -v parser.y
 clean:
 	rm -rf *.o lex.yy.* y.tab.* y.output etapa3 *~
