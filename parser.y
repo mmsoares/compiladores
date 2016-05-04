@@ -248,7 +248,6 @@ literal: LIT_INT  {$$ = astreeCreate(AST_LIT_INT,$1,0,0,0,0);}
        | LIT_TRUE {$$ = astreeCreate(AST_LIT_TRUE,$1,0,0,0,0);}
        | LIT_FALSE  {$$ = astreeCreate(AST_LIT_FALSE,$1,0,0,0,0);}
        | LIT_CHAR {$$ = astreeCreate(AST_LIT_CHAR,$1,0,0,0,0);}
-       | LIT_STRING {$$ = astreeCreate(AST_LIT_STRING,$1,0,0,0,0);}
        ;
 
 %%
