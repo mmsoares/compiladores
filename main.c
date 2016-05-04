@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 	if ((yyin = fopen(argv[1], "r"))==0)
 	{
 		fprintf(stderr, "ERRO! Nao foi possivel abrir este arquivo.\n");
-		exit (1);
+		exit (2);
 	}
 	outputFile = fopen(argv[2], "w");
 	yyparse();
