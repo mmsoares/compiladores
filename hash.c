@@ -42,6 +42,8 @@ HASH_NODE *hashInsert(char *text, int type){
 	newnode->type = type;
 	newnode->text = calloc(strlen(text)+1,sizeof(char));
 	strcpy(newnode->text,text);
+	newnode->dataType = DT_UNDEFINED;
+	newnode->nature = NATURE_UNDEFINED;
 	newnode->next = Table[address];
 	Table[address] = newnode;
 

@@ -1,14 +1,24 @@
 #ifndef HEADER_HASH
 #define HEADER_HASH
 
-#define SYMBOL_LIT_INT 1
-#define SYMBOL_LIT_FLOAT 2
-#define SYMBOL_LIT_TRUE 3
-#define SYMBOL_LIT_FALSE 4
-#define SYMBOL_LIT_CHAR 5
+#define SYMBOL_LIT_INT    1
+#define SYMBOL_LIT_FLOAT  2
+#define SYMBOL_LIT_TRUE   3
+#define SYMBOL_LIT_FALSE  4
+#define SYMBOL_LIT_CHAR   5
 #define SYMBOL_LIT_STRING 6
 #define SYMBOL_IDENTIFIER 7
 
+#define DT_INT       100
+#define DT_CHAR      101
+#define DT_REAL      102
+#define DT_BOOL      103
+#define DT_UNDEFINED 104
+
+#define NATURE_ESCALAR   105
+#define NATURE_VETOR     106
+#define NATURE_FUNCAO    107
+#define NATURE_UNDEFINED 108
 
 #define HASH_SIZE 997
 
@@ -17,6 +27,8 @@
 typedef struct hash_node_struct{
 	int type;
 	char *text;
+	int dataType;
+	int nature;
 	struct hash_node_struct *next;
 } HASH_NODE;
 
