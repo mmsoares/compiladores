@@ -3,9 +3,10 @@ astree.c -> não precisa mudar nada
 astree.h -> não precisa mudar nada
 hash.c -> não precisa mudar nada
 hash.h -> não precisa mudar nada
+semantic.h -> não precisa mudar nada
+
 
 parser.y -> falta só chamar as funções de verificação
 
-semantic.h -> botar a assinatura as funções
 semantic.c -> implementar as funções
 
