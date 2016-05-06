@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "astree.h"
 #include "hash.h"
+#include "semantic.h"
 #include "y.tab.h"
 #include "lex.yy.h"
  
