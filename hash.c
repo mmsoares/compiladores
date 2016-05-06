@@ -43,7 +43,6 @@ HASH_NODE *hashInsert(char *text, int type){
 	newnode->text = calloc(strlen(text)+1,sizeof(char));
 	strcpy(newnode->text,text);
 	newnode->dataType = DT_UNDEFINED;
-	newnode->nature = NATURE_UNDEFINED;
 	newnode->next = Table[address];
 	Table[address] = newnode;
 
@@ -56,6 +55,6 @@ void hashPrint(void){
 	HASH_NODE *node = 0;
 	for(i=0;i<HASH_SIZE;i++)
 		for(node = Table[i];node;node = node->next)
-			printf("Table[%d] = type: %d, value: %s\n",i,node->type, node->text);
+			printf("Table[%d] = type: %d, value: %s, dataType: %d\n",i,node->type, node->text, node->dataType);
 	
 }

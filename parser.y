@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "hash.h"
 #include "astree.h"
+#include "semantic.h"
 
 #define YYDEBUG 0
 int yydebug = 1;
@@ -86,6 +87,7 @@ int yydebug = 1;
 %type <ast> return
 %type <ast> tipo
 %type <ast> literal
+%type <ast> identificador
 
 
 %start  programa
@@ -95,7 +97,8 @@ int yydebug = 1;
 programa: declaracoes     { 
             $$ = astreeCreate(AST_PROGRAMA,0,$1,0,0,0);
             astreePrint ($$,0);
-            decompile($$);
+            //decompile($$);
+//	    semanticCheck($$);
               }
          |            {  $$=astreeCreate(AST_PROGRAMA,0,0,0,0,0); }
          ;
@@ -109,11 +112,22 @@ declaracao: variavel {$$=$1;}
           | funcao   {$$=$1;}
           ;
 
-variavel: tipo TK_IDENTIFIER ':' literal {$$ = astreeCreate(AST_VARIAVEL,$2,$1,$4,0,0);}
+identificador: TK_IDENTIFIER  { $$ = astreeCreate(AST_SYMBOL, $1, 0,0,0,0); }
+
+variavel: tipo identificador ':' literal {
+															$$ = astreeCreate(AST_VARIAVEL,0,$2,$1,$4,0);
+															defineDataType($2->symbol, $1->type);
+														}
             ;
 
-vetor: tipo TK_IDENTIFIER '[' LIT_INT ']'      {$$ = astreeCreate(AST_VETOR_VAZIO,$2,$1,astreeCreate(AST_LIT_INT,$4,0,0,0,0),0,0);}
-     | tipo TK_IDENTIFIER '[' LIT_INT ']' ':' inicializacaovetor {$$ = astreeCreate(AST_VETOR,$2,$1,astreeCreate(AST_LIT_INT,$4,0,0,0,0),$7,0);}
+vetor: tipo identificador '[' LIT_INT ']'      {
+                                                $$ = astreeCreate(AST_VETOR_VAZIO,0,$2,$1,astreeCreate(AST_LIT_INT,$4,0,0,0,0),0);
+																defineDataType($2->symbol, $1->type);
+															  }
+     | tipo identificador '[' LIT_INT ']' ':' inicializacaovetor {
+																						$$ = astreeCreate(AST_VETOR,0,$2,$1,astreeCreate(AST_LIT_INT,$4,0,0,0,0),$7);
+																						defineDataType($2->symbol, $1->type);
+																						}
      ;
 
 inicializacaovetor: literal listaliterais   {$$ = astreeCreate(AST_INI_VETOR,0,$1,$2,0,0);}
@@ -123,10 +137,16 @@ listaliterais: literal listaliterais    {$$ = astreeCreate(AST_LISTA_LITERAIS,0,
          |                        {$$=0;}
              ;
 
-funcao: tipo TK_IDENTIFIER '(' parametros ')' comando {$$ = astreeCreate(AST_FUNCAO,$2,$1,$4,$6,0);}
+funcao: tipo identificador '(' parametros ')' comando {
+																				$$ = astreeCreate(AST_FUNCAO,0,$2,$1,$4,$6);
+																				defineDataType($2->symbol, $1->type);
+																		}
     ;  
 
-parametro: tipo TK_IDENTIFIER   {$$ = astreeCreate(AST_PARAMETRO,$2,$1,0,0,0);}
+parametro: tipo identificador   {
+												$$ = astreeCreate(AST_PARAMETRO,0,$2,$1,0,0);
+												defineDataType($2->symbol, $1->type);
+											}
          ;
 
 parametros: listaparametros {$$=$1;}
@@ -173,9 +193,9 @@ restodalistadeparametroschamada: ',' parametroschamada  {$$=$2;}
 
 
 
-expressao:  TK_IDENTIFIER       {$$ = astreeCreate(AST_IDENTIFIER,$1,0,0,0,0);}
-        | TK_IDENTIFIER '[' expressao ']'   {$$ = astreeCreate(AST_ACESSO_VETOR,0,$1,$3,0,0);}
-        | TK_IDENTIFIER '(' parametroschamada ')' {$$ = astreeCreate(AST_CHAMADA_FUNCAO,$1,$3,0,0,0);}
+expressao:  identificador       {$$ = astreeCreate(AST_SYMBOL,0,$1,0,0,0);}
+        | identificador '[' expressao ']'   {$$ = astreeCreate(AST_ACESSO_VETOR,0,$1,$3,0,0);}
+        | identificador '(' parametroschamada ')' {$$ = astreeCreate(AST_CHAMADA_FUNCAO,0,$1,$3,0,0);}
         | literal         {$$=$1;}
         | '(' expressao ')'       {$$ = astreeCreate(AST_EXPRESSAO_PARENTESES,0,$2,0,0,0);}
         | expressao '+' expressao     {$$ = astreeCreate(AST_OP_SOMA,0,$1,$3,0,0);}
@@ -194,8 +214,8 @@ expressao:  TK_IDENTIFIER       {$$ = astreeCreate(AST_IDENTIFIER,$1,0,0,0,0);}
 
         
 
-atribuicao: TK_IDENTIFIER '=' expressao       {$$ = astreeCreate(AST_ATRIBUICAO,$1,$3,0,0,0);}
-            |   TK_IDENTIFIER'[' expressao ']' '=' expressao  {$$ = astreeCreate(AST_ATRIBUICAO_VETOR,$1,$3,$6,0,0);}
+atribuicao: identificador '=' expressao       {$$ = astreeCreate(AST_ATRIBUICAO,0,$1,$3,0,0);}
+            |   identificador'[' expressao ']' '=' expressao  {$$ = astreeCreate(AST_ATRIBUICAO_VETOR,0,$1,$3,$6,0);}
         ;
 
         
@@ -212,7 +232,7 @@ input: KW_INPUT listadevariaveis  {$$ = astreeCreate(AST_INPUT,0,$2,0,0,0);}
 
         
 
-listadevariaveis: TK_IDENTIFIER restolistadevariaveis {$$ = astreeCreate(AST_LISTA_VARIAVEIS,$1,$2,0,0,0);}
+listadevariaveis: identificador restolistadevariaveis {$$ = astreeCreate(AST_LISTA_VARIAVEIS,0,$1,$2,0,0);}
                         ;
 
 

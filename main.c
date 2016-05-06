@@ -24,9 +24,9 @@ int main(int argc, char **argv)
 		fprintf(stderr, "ERRO! Nao foi possivel abrir este arquivo.\n");
 		exit (2);
 	}
-	outputFile = fopen(argv[2], "w");
+	//outputFile = fopen(argv[2], "w");
 	yyparse();
-   	hashPrint();
-	fclose(outputFile);
+   hashPrint();
+	//fclose(outputFile);
 	return 0;
 }

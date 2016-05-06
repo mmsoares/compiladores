@@ -4,13 +4,15 @@
 #include "astree.h"
 
 extern  int     getLineNumber(void);
-extern  FILE    *outputFile;
+//extern  FILE    *outputFile;
 
 ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *son0, ASTREE *son1, ASTREE *son2, ASTREE *son3) {
 	ASTREE *newnode = 0;
 	newnode = (ASTREE*) calloc(1,sizeof(ASTREE));
 	newnode->symbol = symbol;
 	newnode->type = type;
+   newnode->nature = NATURE_UNDEFINED;
+   newnode->dataType = DT_UNDEFINED;
 	newnode->son[0] = son0;
 	newnode->son[1] = son1;
 	newnode->son[2] = son2;
@@ -20,13 +22,34 @@ ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *son0, ASTREE *son1, AS
 	return newnode;
 }
 
+void defineDataType(struct hash_node_struct *symbol, int type) {
+	fprintf(stderr, "setting data type %d for symbol %s\n", type, symbol->text);
+	if(symbol->dataType == DT_UNDEFINED) {
+		switch(type) {
+			case AST_KW_INT:
+				symbol->dataType = DT_INT;
+				break;
+			case AST_KW_BOOL:
+				symbol->dataType = DT_BOOL;
+				break;
+			case AST_KW_CHAR:
+				symbol->dataType = DT_CHAR;				
+				break;
+			case AST_KW_REAL:
+				symbol->dataType = DT_REAL;				
+				break;
+			default: break;
+		}
+	}
+}
+
 void astreePrint(ASTREE* node, int level) {
 	int i;
 
 	if(node==0) return;
 
 	for(i=0;i<level; ++i) fprintf(stderr, "  ");
-	fprintf(stderr, "Astree(");
+	//fprintf(stderr, "Astree(");
 
 	switch(node->type) {
 		case AST_PROGRAMA: 		fprintf(stderr,"AST_PROGRAMA"); break;
@@ -79,6 +102,7 @@ void astreePrint(ASTREE* node, int level) {
 		case AST_BLOCO:			fprintf(stderr,"AST_BLOCO"); break;
 		case AST_IDENTIFIER:    fprintf(stderr, "AST_IDENTIFIER"); break;
 		case AST_COMANDO_VAZIO:    fprintf(stderr, "AST_COMANDO_VAZIO"); break;
+      case AST_SYMBOL:  fprintf(stderr, "AST_SYMBOL"); break;
 
 		default: fprintf(stderr, "UNKNOWN"); 
 				 fprintf(stderr, "Node type: %d\n", node->type);
@@ -86,14 +110,16 @@ void astreePrint(ASTREE* node, int level) {
 	}
 	if(node->symbol) {
 		fprintf(stderr, ",%s", node->symbol->text);
+		fprintf(stderr, ", %d", node->symbol->dataType);
 	}
+
 	fprintf(stderr, "\n");
 	
 	for(i=0;i<MAX_SONS;i++) {
 		astreePrint(node->son[i], level+1);
 	}
 }
-
+/*
 void decompile(ASTREE *raiz) {
 	
 	if (raiz !=0)
@@ -388,4 +414,4 @@ void decompile(ASTREE *raiz) {
     }
 
 }
-
+*/
