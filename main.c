@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 	}
 	//outputFile = fopen(argv[2], "w");
 	yyparse();
-   hashPrint();
+   //hashPrint();
 	//fclose(outputFile);
 	return 0;
 }

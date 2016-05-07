@@ -23,7 +23,7 @@ ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *son0, ASTREE *son1, AS
 }
 
 void defineDataType(struct hash_node_struct *symbol, int type) {
-	fprintf(stderr, "setting data type %d for symbol %s\n", type, symbol->text);
+	//fprintf(stderr, "setting data type %d for symbol %s\n", type, symbol->text);
 	if(symbol->dataType == DT_UNDEFINED) {
 		switch(type) {
 			case AST_KW_INT:
@@ -43,7 +43,7 @@ void defineDataType(struct hash_node_struct *symbol, int type) {
 	}
 }
 
-void astreePrint(ASTREE* node, int level) {
+void printNode(ASTREE *node, int level) {
 	int i;
 
 	if(node==0) return;
@@ -114,7 +114,26 @@ void astreePrint(ASTREE* node, int level) {
 	}
 
 	fprintf(stderr, "\n");
+}
+
+void asTreePrintNodeWithDirectChildren(ASTREE* node) {
+	printNode(node, 0);
+
+	int i;
+
+	for(i=0;i<MAX_SONS;i++) {
+		printNode(node->son[i], 1);
+	}
+	fprintf(stderr, "\n\n");
+}
+
+void astreePrint(ASTREE* node, int level) {
+	int i;
 	
+	if(node==0) return;
+
+	printNode(node, level);
+
 	for(i=0;i<MAX_SONS;i++) {
 		astreePrint(node->son[i], level+1);
 	}

@@ -5,46 +5,60 @@
 #include "y.tab.h"
 #include "semantic.h"
 
-void semantic_check(struct hash_node_struct* hashmap, struct astree_struct* syntaxtree) {
-	semantic_declaration(syntaxtree);
-	semantic_undeclared(hashmap);
-	semantic_type(syntaxtree);
+void performSemanticValidations(struct hash_node_struct* hashmap, struct astree_struct* syntaxtree) {
+	fprintf(stderr, "going to check declarations\n");
+	checkDeclaration(syntaxtree);
+	fprintf(stderr, "going to check for Undeclared variables\n");
+	checkUndeclaredVariables(hashmap);
+	fprintf(stderr, "going to check types\n");
+	checkTypes(syntaxtree);
 }
 
-void semantic_declaration(struct astree_struct* syntaxtree) {
+void checkDeclaration(struct astree_struct* syntaxtree) {
 	struct astree_struct* declaration;
-	struct astree_struct* type;
-	struct astree_struct* identifier;
-	struct astree_struct* program;
+	struct astree_struct* declarations = syntaxtree->son[0];
+	//struct astree_struct* declaration;
+
+	//asTreePrintNodeWithDirectChildren(declarations->son[0]);
+	for(declaration=declarations->son[1];declaration;declaration=declaration->son[1]) {
+		//asTreePrintNodeWithDirectChildren(declaration);
+	}
+
+/*
+	fprintf(stderr, "starting checkDeclaration\n");
 
 	for (program = syntaxtree; program; program = program->son[0]) {
+		fprintf(stderr, "starting for loop\n");
 		declaration = program->son[1];
 		type = declaration->son[0];
 		identifier = declaration->son[1];
-		if (identifier->symbol->type != TK_IDENTIFIER) {
-			printf("SEMANTIC ERROR: %s already declared.\n", identifier->symbol->text);
+
+		fprintf(stderr, "set variables\n");
+
+		if (identifier->symbol->type != SYMBOL_IDENTIFIER) {
+			fprintf(stderr, "Erro: %s ja foi declarada.\n", identifier->symbol->text);
 			exit(4);
-			continue;
 		}
+
+		fprintf(stderr, "checked if variable was already declared\n");
+
 		identifier->symbol->declaration = declaration;
+
 		switch (declaration->type) {
-			case VARIABLE_DECLARATION :
+			case AST_VARIAVEL :
 				identifier->symbol->type = SYMBOL_VARIABLE;
 				break;
-			case VECTOR_DECLARATION :
+			case AST_VETOR_VAZIO:
+			case AST_VETOR:
 				identifier->symbol->type = SYMBOL_VECTOR;
-				break;
-			case POINTER_DECLARATION :
-				identifier->symbol->type = SYMBOL_POINTER;
-				break;
-			case FUNCTION_DECLARATION :
+				break;			
+			case AST_FUNCAO :
 				identifier->symbol->type = SYMBOL_FUNCTION;
-				semantic_parameterDeclaration(declaration->son[2]);
+				checkParameterDeclaration(declaration->son[2]);
 				break;
 			default:
-				printf("SEMANTIC ERROR: Unknown declaration.\n");
+				fprintf(stderr, "Erro: declaracao de tipo desconhecido");
 				exit(4);
-				break;
 		}
 		identifier->dataType = identifier->symbol->dataType;
 		identifier->nature = identifier->symbol->type;
@@ -52,11 +66,11 @@ void semantic_declaration(struct astree_struct* syntaxtree) {
 		declaration->dataType = identifier->dataType;
 		declaration->nature = identifier->type;
 	}
-	return 0;
+	*/
 }
 
-void semantic_parameterDeclaration(struct astree_struct* parameterList) {
-	struct astree_struct* parameter;
+void checkParameterDeclaration(struct astree_struct* parameterList) {
+/*	struct astree_struct* parameter;
 	struct astree_struct* type;
 	struct astree_struct* identifier;
 	for (; list; list = list->son[1]) {
@@ -72,10 +86,11 @@ void semantic_parameterDeclaration(struct astree_struct* parameterList) {
 			parameter->nature = identifier->symbol->type;
 		}
 	}
-	return 0;
+	*/
 }
 
-void semantic_undeclared(struct hash_node_struct* hashmap) {
+void checkUndeclaredVariables(struct hash_node_struct* hashmap) {
+	/*
 	int index;
 	struct hash_node_struct* node;
 	for (index = 0; index < hashmap->size; ++index) {
@@ -86,25 +101,27 @@ void semantic_undeclared(struct hash_node_struct* hashmap) {
 			}
 		}
 	}
-	return 0;
+	*/
 }
 
-void semantic_types(struct astree_struct* syntaxtree) {
+void checkTypes(struct astree_struct* syntaxtree) {
+	/*
 	for (; list; list = list->son[0]) {
 		if (list->son[1]->type == FUNCTION_DECLARATION) {
-			semantic_codeType(list->son[1]->son[0], list->son[1]->son[1], list->son[1]->son[3]);
+			checkCodeType(list->son[1]->son[0], list->son[1]->son[1], list->son[1]->son[3]);
 		}
 	}
-	return 0;
+	*/
 }
 
-void semantic_codeType(struct astree_struct* functionType, struct astree_struct* functionName, struct astree_struct* node) {
-	struct astree_struct* list;
+void checkCodeType(struct astree_struct* functionType, struct astree_struct* functionName, struct astree_struct* node) {
+	
+	/*struct astree_struct* list;
 	switch (node->type) {
 		case BLOCK :
 			for (list = node->son[0]; list; list = list->son[1]) {
 				if (list->son[0]) {
-					semantic_codeType(functionType, functionName, list->son[0]);
+					checkCodeType(functionType, functionName, list->son[0]);
 				}
 			}
 			break;
@@ -122,12 +139,12 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 			node->nature = node->symbol->type;
 			break;
 		case ADDRESS :
-			semantic_codeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[0]);
 			node->dataType = DATATYPE_WORD;
 			node->nature = SYMBOL_LITERAL_INTEGER;
 			break;
 		case POINTER :
-			semantic_codeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[0]);
 			if (node->son[0]->symbol->type == SYMBOL_FUNCTION) {
 				printf("SEMANTIC ERROR: Using function as pointer in function %s.\n", functionName->symbol->text);
 				exit(4);
@@ -144,8 +161,8 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 			node->nature = node->son[0]->symbol->type;
 			break;
 		case VECTOR :
-			semantic_codeType(functionType, functionName, node->son[0]);
-			semantic_codeType(functionType, functionName, node->son[1]);
+			checkCodeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[1]);
 			if (node->son[0]->symbol->type == SYMBOL_VARIABLE) {
 				printf("SEMANTIC ERROR: Using non-vector as vector in function %s.\n", functionName->symbol->text);
 				exit(4);
@@ -176,7 +193,7 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 				parameterlist = node->son[0]->symbol->declaration->son[2];
 				argumentlist = node->son[1];
 				while (parameterlist && argumentlist) {
-					semantic_codeType(functionType, functionName, argumentlist->son[0]);
+					checkCodeType(functionType, functionName, argumentlist->son[0]);
 					if (parameterlist->son[0]->dataType != argumentlist->son[0]->dataType) {
 						if ((parameterlist->son[0]->dataType == DATATYPE_BOOL) && (argumentlist->son[0]->dataType != DATATYPE_BOOL)) {
 							printf("SEMANTIC ERROR: Argument types mismatch when calling a function in function %s.\n", functionName->symbol->text);
@@ -203,8 +220,8 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 			node->nature = node->son[0]->symbol->type;
 			break;
 		case ASSIGN_VAR :
-			semantic_codeType(functionType, functionName, node->son[0]);
-			semantic_codeType(functionType, functionName, node->son[1]);
+			checkCodeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[1]);
 			if (node->son[0]->dataType != node->son[1]->dataType) {
 				if ((node->son[0]->dataType == DATATYPE_BOOL) && (node->son[1]->dataType != DATATYPE_BOOL)) {
 					printf("SEMANTIC ERROR: Invalid assignment using boolean types in function %s.\n", functionName->symbol->text);
@@ -227,9 +244,9 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 			}
 			break;
 		case ASSIGN_VECTOR :
-			semantic_codeType(functionType, functionName, node->son[0]);
-			semantic_codeType(functionType, functionName, node->son[1]);
-			semantic_codeType(functionType, functionName, node->son[2]);
+			checkCodeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[1]);
+			checkCodeType(functionType, functionName, node->son[2]);
 			if ((node->son[1]->dataType == DATATYPE_BOOL) || (node->son[0]->symbol->type == SYMBOL_POINTER)) {
 				printf("SEMANTIC ERROR: Using vector with invalid index in function %s.\n", functionName->symbol->text);
 				exit(4);
@@ -256,10 +273,10 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 			}
 			break;
 		case INPUT :
-			semantic_codeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[0]);
 			break;
 		case OUTPUT :
-			semantic_codeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[0]);
 			if ((node->son[0]->dataType != DATATYPE_BYTE) && (node->son[0]->dataType != DATATYPE_WORD) && (node->son[0]->dataType != DATATYPE_BOOL)) {
 				if ((node->son[0]->symbol != NULL) && (node->son[0]->symbol->type != LIT_STRING)) {
 					printf("SEMANTIC ERROR: Invalid output in function %s.\n", functionName->symbol->text);
@@ -283,16 +300,16 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 			break;
 		case OUTPUT_LIST :
 			if (node->son[0]) {
-				semantic_codeType(functionType, functionName, node->son[0]);
+				checkCodeType(functionType, functionName, node->son[0]);
 			}
 			if (node->son[1]) {
-				semantic_codeType(functionType, functionName, node->son[1]);
+				checkCodeType(functionType, functionName, node->son[1]);
 			}
 			node->dataType = node->son[0]->dataType;
 			node->nature = node->son[0]->type;
 			break;
 		case RETURN :
-			semantic_codeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[0]);
 			if (node->son[0]->dataType != functionName->dataType) {
 				printf("SEMANTIC ERROR: Return type does not match function type in function %s.\n", functionName->symbol->text);
 				exit(4);
@@ -301,15 +318,15 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 		case IF_THEN :
 		case IF_ELSE :
 		case IF_LOOP :
-			semantic_codeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[0]);
 			if (node->son[1]) {
-				semantic_codeType(functionType, functionName, node->son[1]);
+				checkCodeType(functionType, functionName, node->son[1]);
 			}
 			if (node->son[2]) {
-				semantic_codeType(functionType, functionName, node->son[2]);
+				checkCodeType(functionType, functionName, node->son[2]);
 			}
 			if (node->son[3]) {
-				semantic_codeType(functionType, functionName, node->son[3]);
+				checkCodeType(functionType, functionName, node->son[3]);
 			}
 			if (node->son[0]->dataType != DATATYPE_BOOL) {
 				printf("SEMANTIC ERROR: If with non-boolean condition in function %s.\n", functionName->symbol->text);
@@ -317,7 +334,7 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 			}
 			break;
 		case EXPRESSION_ORDER :
-			semantic_codeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[0]);
 			node->dataType = node->son[0]->dataType;
 			node->nature = node->son[0]->nature;
 			break;
@@ -326,8 +343,8 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 		case OP_TIMES :
 		case OP_DIVIDE :
 		case OP_MODULE :
-			semantic_codeType(functionType, functionName, node->son[0]);
-			semantic_codeType(functionType, functionName, node->son[1]);
+			checkCodeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[1]);
 			if (node->son[0]->dataType == DATATYPE_BOOL || node->son[1]->dataType == DATATYPE_BOOL) {
 				printf("SEMANTIC ERROR: Invalid arithmetic operation using boolean in function %s.\n", functionName->symbol->text);
 				exit(4);
@@ -366,8 +383,8 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 		case OP_GREATER :
 		case OP_LESSEREQUAL :
 		case OP_GREATEREQUAL :
-			semantic_codeType(functionType, functionName, node->son[0]);
-			semantic_codeType(functionType, functionName, node->son[1]);
+			checkCodeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[1]);
 			if ((node->son[0]->dataType != DATATYPE_BYTE) && (node->son[0]->dataType != DATATYPE_WORD)) {
 				printf("SEMANTIC ERROR: Invalid first operator of logic operation in function %s.\n", functionName->symbol->text);
 				exit(4);
@@ -381,8 +398,8 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 			break;
 		case OP_EQUAL :
 		case OP_NOTEQUAL :
-			semantic_codeType(functionType, functionName, node->son[0]);
-			semantic_codeType(functionType, functionName, node->son[1]);
+			checkCodeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[1]);
 			if (node->son[0]->dataType != node->son[1]->dataType) {
 				if ((node->son[0]->dataType == DATATYPE_BOOL) && (node->son[1]->dataType != DATATYPE_BOOL)) {
 					printf("SEMANTIC ERROR: Invalid logic operation in function %s.\n", functionName->symbol->text);
@@ -398,8 +415,8 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 			break;
 		case OP_AND :
 		case OP_OR :
-			semantic_codeType(functionType, functionName, node->son[0]);
-			semantic_codeType(functionType, functionName, node->son[1]);
+			checkCodeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[1]);
 			if ((node->son[0]->dataType != DATATYPE_BOOL) || (node->son[1]->dataType != DATATYPE_BOOL)) {
 				printf("SEMANTIC ERROR: Invalid logic operation in function %s.\n", functionName->symbol->text);
 				exit(4);
@@ -408,7 +425,7 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 			node->nature = SYMBOL_BOOLEAN;
 			break;
 		case OP_NOT :
-			semantic_codeType(functionType, functionName, node->son[0]);
+			checkCodeType(functionType, functionName, node->son[0]);
 			if (node->son[0]->dataType != DATATYPE_BOOL) {
 				printf("SEMANTIC ERROR: Invalid logic operation with in function %s.\n", functionName->symbol->text);
 				exit(4);
@@ -421,6 +438,5 @@ void semantic_codeType(struct astree_struct* functionType, struct astree_struct*
 			exit(4);
 			break;
 	}
-	return 0;
+	*/
 }
-
