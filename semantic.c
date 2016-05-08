@@ -6,10 +6,44 @@
 #include "semantic.h"
 
 void performSemanticValidations(HASH_NODE* hashmap, ASTREE* syntaxtree) {
+	fprintf(stderr, "going to set the nature\n");
+	setNature(syntaxtree);
 	fprintf(stderr, "going to check declarations\n");
 	checkDeclaration(syntaxtree);
 	fprintf(stderr, "going to check types\n");
 	checkTypes(syntaxtree);
+}
+
+void setNature(ASTREE *root) {
+	ASTREE *declarations;
+
+	for(declarations = root->son[0];declarations!=NULL;declarations=declarations->son[1]) {	
+		switch(declarations->son[0]->type){
+			case AST_VARIAVEL:
+				declarations->son[0]->son[0]->symbol->nature = NATURE_ESCALAR;
+				break;
+			case AST_VETOR:
+			case AST_VETOR_VAZIO:
+				declarations->son[0]->son[0]->symbol->nature = NATURE_VETOR;
+				break;
+			case AST_FUNCAO:
+				declarations->son[0]->son[0]->symbol->nature = NATURE_FUNCAO;
+				break;
+			default:
+				break;
+		}
+	}
+
+	HASH_NODE *node = 0;
+	int i;
+
+	for(i=0;i<HASH_SIZE;i++){
+		for(node = Table[i];node;node = node->next){
+			if(node->type == SYMBOL_IDENTIFIER && node->nature == NATURE_UNDEFINED) {
+				node->nature = NATURE_ESCALAR;
+			}
+		}
+	}
 }
 
 int getSymbolDeclarations(HASH_NODE *node, ASTREE *root) {
@@ -68,26 +102,6 @@ void checkDeclaration(ASTREE* root) {
 			}
 		}
 	}
-}
-
-void checkParameterDeclaration(ASTREE* parameterList) {
-/*	ASTREE* parameter;
-	ASTREE* type;
-	ASTREE* identifier;
-	for (; list; list = list->son[1]) {
-		parameter = list->son[0];
-		type = parameter->son[0];
-		identifier = parameter->son[1];
-		if (identifier->symbol->type != TK_IDENTIFIER) {
-			printf("SEMANTIC ERROR: Parameter %s already declared.\n", identifier->symbol->text);
-			exit(4);
-		} else {
-			identifier->symbol->type = SYMBOL_FUNCTION_PARAM;
-			parameter->dataType = identifier->symbol->dataType;
-			parameter->nature = identifier->symbol->type;
-		}
-	}
-	*/
 }
 
 void checkTypes(ASTREE* syntaxtree) {

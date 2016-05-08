@@ -7,7 +7,6 @@
 void performSemanticValidations(HASH_NODE* hashmap, ASTREE* syntaxtree);
 int  getSymbolDeclarations(HASH_NODE *node, ASTREE *root);
 void checkDeclaration(ASTREE* syntaxtree);
-void checkParameterDeclaration(ASTREE* parameterList);
 void checkTypes(ASTREE* syntaxtree);
 void checkCodeType(ASTREE* functionType, ASTREE* functionName, ASTREE* node);
 

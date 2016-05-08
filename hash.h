@@ -38,6 +38,7 @@ typedef struct hash_node_struct{
 	int type;
 	char *text;
 	int dataType;
+	int nature;
 	struct astree_struct *declaration;
 	struct hash_node_struct *next;
 } HASH_NODE;
