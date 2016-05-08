@@ -14,11 +14,40 @@ void performSemanticValidations(struct hash_node_struct* hashmap, struct astree_
 	checkTypes(syntaxtree);
 }
 
+void checkDuplicateDeclaration(struct astree_struct* node) {
+	/*  Loopar na hash table e pra cada simbolo que tá lá, ver se existe
+	      uma e somente uma declaração pra ele.
+	    Assim, verificamos tanto simbolos não declarados quanto simbolos
+	      redeclarados.
+	    OBS: a declaração pode ser como parâmetro da função
+	*/
+	int i;
+	HASH_NODE *hashNode = 0;
+	for(i=0;i<HASH_SIZE;i++) {
+		for(hashNode=Table[i];hashNode;hashNode=hashNode->next) {
+			if(hashNode->type == SYMBOL_IDENTIFIER) {
+				int declarations = 0;
+
+				//verificar se há alguma declaração deste simbolo
+
+				if(declarations == 0) {
+					fprintf(stderr, "Erro: simbolo %s nao foi declarado!\n", hashNode->text);
+					exit(4);
+				}
+				if(declarations > 1) {
+					fprintf(stderr, "Erro: simbolo %s foi declarado mais de uma vez!\n", hashNode->text);
+					exit(4);
+				}
+			}
+		}
+	}
+}
+
 void checkDeclaration(struct astree_struct* syntaxtree) {
 	struct astree_struct* declaration;
 	struct astree_struct* declarations = syntaxtree->son[0];
-	//struct astree_struct* declaration;
 
+	checkDuplicateDeclaration(syntaxtree);
 	//asTreePrintNodeWithDirectChildren(declarations->son[0]);
 	for(declaration=declarations->son[1];declaration;declaration=declaration->son[1]) {
 		//asTreePrintNodeWithDirectChildren(declaration);
