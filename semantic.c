@@ -19,7 +19,31 @@ int getSymbolDeclarations(HASH_NODE *node, ASTREE *root) {
 	for(declarations = root->son[0];declarations!=NULL;declarations=declarations->son[1]) {
 		if(strcmp(declarations->son[0]->son[0]->symbol->text, node->text)==0){
 			numOfDeclarations++;
-		}		
+		}
+
+		if(declarations->son[0]->type == AST_FUNCAO) {
+			if(declarations->son[0]->son[2]->type == AST_PARAMETRO){
+				if(strcmp(declarations->son[0]->son[2]->son[0]->symbol->text, node->text)==0){
+					numOfDeclarations++;
+				}
+			}
+
+			if(declarations->son[0]->son[2]->type == AST_LISTA_PARAMETRO){
+				ASTREE *aux;
+
+				for(aux=declarations->son[0]->son[2];aux;aux=aux->son[1]){
+					if(strcmp(aux->son[0]->son[0]->symbol->text, node->text)==0){
+						numOfDeclarations++;
+					}
+					if(aux->son[1]->type == AST_PARAMETRO){
+						if(strcmp(aux->son[1]->son[0]->symbol->text, node->text)==0){
+							numOfDeclarations++;
+						}
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	return numOfDeclarations;
