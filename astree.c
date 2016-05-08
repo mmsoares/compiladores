@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "astree.h"
+#include "hash.h"
 
 extern  int     getLineNumber(void);
 //extern  FILE    *outputFile;
@@ -11,18 +12,15 @@ ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *son0, ASTREE *son1, AS
 	newnode = (ASTREE*) calloc(1,sizeof(ASTREE));
 	newnode->symbol = symbol;
 	newnode->type = type;
-   newnode->nature = NATURE_UNDEFINED;
-   newnode->dataType = DT_UNDEFINED;
 	newnode->son[0] = son0;
 	newnode->son[1] = son1;
 	newnode->son[2] = son2;
 	newnode->son[3] = son3;
-
-
+	
 	return newnode;
 }
 
-void defineDataType(struct hash_node_struct *symbol, int type) {
+void defineDataType(HASH_NODE *symbol, int type) {
 	//fprintf(stderr, "setting data type %d for symbol %s\n", type, symbol->text);
 	if(symbol->dataType == DT_UNDEFINED) {
 		switch(type) {

@@ -61,8 +61,6 @@
 
 typedef struct astree_struct {
     int type;
-    int nature;
-    int dataType;
     struct hash_node_struct* symbol;
     struct astree_struct *son[MAX_SONS];
 } ASTREE;

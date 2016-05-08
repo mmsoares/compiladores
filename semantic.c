@@ -10,6 +10,8 @@ void performSemanticValidations(HASH_NODE* hashmap, ASTREE* syntaxtree) {
 	setNature(syntaxtree);
 	fprintf(stderr, "going to check declarations\n");
 	checkDeclaration(syntaxtree);
+	fprintf(stderr, "going to check identifiers usage\n");
+	checkUsage(syntaxtree);	
 	fprintf(stderr, "going to check types\n");
 	checkTypes(syntaxtree);
 }
@@ -89,7 +91,6 @@ void checkDeclaration(ASTREE* root) {
 	for(i=0;i<HASH_SIZE;i++) {
 		for(hashNode=Table[i];hashNode;hashNode=hashNode->next) {
 			if(hashNode->type == SYMBOL_IDENTIFIER) {
-				fprintf(stderr, "Declaracoes de: %s\n", hashNode->text);
 				int declarations = getSymbolDeclarations(hashNode, root);
 
 				if(declarations == 0) {
@@ -103,6 +104,45 @@ void checkDeclaration(ASTREE* root) {
 			}
 		}
 	}
+}
+
+void checkUsage(ASTREE* node) {
+	int i;
+	
+	if(node==0) return;
+
+	switch(node->type) {
+		case AST_CHAMADA_FUNCAO:
+			if(node->son[0]->symbol->nature != NATURE_ESCALAR) {
+				fprintf(stderr, "Uso incorreto do identificador %s como funcao\n", node->symbol->text);
+				exit(4);
+			}		
+			break;
+		case AST_VARIAVEL:
+			if(node->son[0]->symbol->nature != NATURE_ESCALAR) {
+				fprintf(stderr, "Uso incorreto do identificador %s como escalar\n", node->symbol->text);
+				exit(4);
+			}
+			break;
+		case AST_ACESSO_VETOR:
+			if(node->son[0]->symbol->nature != NATURE_ESCALAR) {
+				fprintf(stderr, "Uso incorreto do identificador %s como vetor\n", node->symbol->text);
+				exit(4);
+			}		
+			break;
+		case AST_ATRIBUICAO_VETOR:
+			if(node->son[0]->symbol->nature != NATURE_ESCALAR) {
+				fprintf(stderr, "Uso incorreto do identificador %s como vetor\n", node->symbol->text);
+				exit(4);
+			}				
+			break;	
+		default:
+			break;
+	}
+
+	for(i=0;i<MAX_SONS;i++) {
+		checkUsage(node->son[i]);
+	}	
 }
 
 void checkTypes(ASTREE* syntaxtree) {
