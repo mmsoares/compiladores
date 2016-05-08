@@ -11,14 +11,6 @@
 #define SYMBOL_LIT_STRING 6
 #define SYMBOL_IDENTIFIER 7
 
-#define SYMBOL_UNDEFINED		200
-#define SYMBOL_VARIABLE			210
-#define SYMBOL_VECTOR			211
-#define SYMBOL_POINTER			212
-#define SYMBOL_FUNCTION			213
-#define SYMBOL_FUNCTION_PARAM	214
-#define SYMBOL_BOOLEAN			215
-
 #define DT_INT       100
 #define DT_CHAR      101
 #define DT_REAL      102
