@@ -98,7 +98,7 @@ int yydebug = 1;
 
 programa: declaracoes     { 
             $$ = astreeCreate(AST_PROGRAMA,0,$1,0,0,0);
-            astreePrint ($$,0);
+            //astreePrint ($$,0);
             //decompile($$);
             performSemanticValidations(Table, $$);
               }
@@ -122,17 +122,17 @@ identificadorVet: TK_IDENTIFIER  { $$ = astreeCreate(AST_SYMBOL_VET, $1, 0,0,0,0
 
 variavel: tipo identificadorVar ':' literal {
 															$$ = astreeCreate(AST_VARIAVEL,0,$2,$1,$4,0);
-															defineHashDataType($2->symbol, $1->type);
+															defineHashDataType($2->symbol, $1->type, $$);
 														}
             ;
 
 vetor: tipo identificadorVet '[' LIT_INT ']'      {
                                                 $$ = astreeCreate(AST_VETOR_VAZIO,0,$2,$1,astreeCreate(AST_LIT_INT,$4,0,0,0,0),0);
-																defineHashDataType($2->symbol, $1->type);
+																defineHashDataType($2->symbol, $1->type, $$);
 															  }
      | tipo identificadorVet '[' LIT_INT ']' ':' inicializacaovetor {
 																						$$ = astreeCreate(AST_VETOR,0,$2,$1,astreeCreate(AST_LIT_INT,$4,0,0,0,0),$7);
-																						defineHashDataType($2->symbol, $1->type);
+																						defineHashDataType($2->symbol, $1->type, $$);
 																						}
      ;
 
@@ -145,13 +145,13 @@ listaliterais: literal listaliterais    {$$ = astreeCreate(AST_LISTA_LITERAIS,0,
 
 funcao: tipo identificadorFun '(' parametros ')' comando {
 																				$$ = astreeCreate(AST_FUNCAO,0,$2,$1,$4,$6);
-																				defineHashDataType($2->symbol, $1->type);
+																				defineHashDataType($2->symbol, $1->type, $$);
 																		}
     ;  
 
 parametro: tipo identificadorVar   {
 												$$ = astreeCreate(AST_PARAMETRO,0,$2,$1,0,0);
-												defineHashDataType($2->symbol, $1->type);
+												defineHashDataType($2->symbol, $1->type, $$);
 											}
          ;
 

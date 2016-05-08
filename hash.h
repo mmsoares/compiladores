@@ -16,6 +16,7 @@
 #define DT_REAL      102
 #define DT_BOOL      103
 #define DT_UNDEFINED 104
+#define DT_NOT_SET   105
 
 #define NATURE_VETOR     110
 #define NATURE_ESCALAR   112

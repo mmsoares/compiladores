@@ -6,14 +6,14 @@
 #include "semantic.h"
 
 void performSemanticValidations(HASH_NODE* hashmap, ASTREE* syntaxtree) {
-	fprintf(stderr, "going to set the nature\n");
 	setNature(syntaxtree);
-	fprintf(stderr, "going to check declarations\n");
 	checkDeclaration(syntaxtree);
-	fprintf(stderr, "going to check identifiers usage\n");
 	checkUsage(syntaxtree);	
-	fprintf(stderr, "going to check types\n");
-	checkType(syntaxtree);
+	setDataTypeToVarKwAndLit(syntaxtree);
+	setDataTypeToVarUsage(syntaxtree);
+	setUndefinedDataTypes(syntaxtree);
+	setDataTypeToVarFather(syntaxtree);
+	astreePrint(syntaxtree, 0);
 }
 
 void setNature(ASTREE *root) {
@@ -151,5 +151,157 @@ void checkParameters(ASTREE* node) {
 	if(node==0) return;
 
 	switch(node->type) {
+
 	}
+}
+
+void setDataTypeToVarKwAndLit(ASTREE *node) {
+	if(node==0) return;
+	int i;
+
+	switch(node->type) {
+		case AST_KW_INT:
+		case AST_LIT_INT:
+			node->dataType = DT_INT;
+			break;
+		case AST_KW_REAL:
+			node->dataType = DT_REAL;
+			break;
+		case AST_KW_CHAR:
+		case AST_LIT_CHAR:
+			node->dataType = DT_CHAR;
+			break;
+		case AST_KW_BOOL:
+		case AST_LIT_TRUE:
+		case AST_LIT_FALSE:
+			node->dataType = DT_BOOL;
+			break;
+		default:
+			break;
+	}
+
+	for(i=0;i<MAX_SONS;i++) {
+		setDataTypeToVarKwAndLit(node->son[i]);
+	}	
+}
+
+void setDataTypeToVarUsage(ASTREE* node) {
+	if(node==0) return;
+	int i;
+
+	if(!node->dataType || node->dataType == DT_NOT_SET){
+		switch(node->type) {
+			case AST_SYMBOL_VAR:
+			case AST_SYMBOL_VET:
+			case AST_SYMBOL_FUN:
+				node->dataType = node->symbol->dataType;		
+				break;		
+			default:
+				break;
+		}
+	}
+	
+	for(i=0;i<MAX_SONS;i++) {
+		setDataTypeToVarUsage(node->son[i]);
+	}		
+}
+
+void setDataTypeToVar(ASTREE *node) {
+	if(node==0) return;
+	int i;
+
+	if(!node->dataType || node->dataType == DT_NOT_SET){
+		switch(node->type) {
+			case AST_SYMBOL_VAR:
+			case AST_SYMBOL_VET:
+			case AST_SYMBOL_FUN:
+				node->dataType = node->symbol->dataType;		
+				break;		
+			default:
+				break;
+		}
+	}
+	
+	for(i=0;i<MAX_SONS;i++) {
+		setDataTypeToVar(node->son[i]);
+	}		
+}
+
+void setUndefinedDataTypes(ASTREE *node) {
+	if(node==0) return;
+	int i;
+
+	switch(node->type) {
+		case AST_BLOCO:
+		case AST_PROGRAMA:
+		case AST_LISTA_PARAMETRO:
+		case AST_DECLARACOES:
+		case AST_LISTA_LITERAIS:
+		case AST_LISTA_ELEM_STRING:
+		case AST_COMANDOS:
+		case AST_COMANDO_VAZIO:
+		case AST_OUTPUT:
+			node->dataType = DT_UNDEFINED;
+			break;		
+		default:
+			break;
+	}
+	
+	for(i=0;i<MAX_SONS;i++) {
+		setUndefinedDataTypes(node->son[i]);
+	}		
+}
+
+void setDataTypeToVarFather(ASTREE *node) {
+	if(node==0) return;
+	int i;
+
+	switch(node->type) {
+		case AST_CHAMADA_FUNCAO:
+		case AST_VARIAVEL:
+		case AST_ACESSO_VETOR:
+		case AST_ATRIBUICAO_VETOR:
+			node->dataType = node->son[0]->dataType;
+			break;		
+		default:
+			break;
+	}
+	
+	for(i=0;i<MAX_SONS;i++) {
+		setDataTypeToVarFather(node->son[i]);
+	}	
+}
+
+int setTypes(ASTREE* node) {
+	int i;
+
+	if(node==0) return DT_UNDEFINED;
+
+//
+
+	int typeSon[MAX_SONS];
+	for(i=0;i<MAX_SONS;i++) {
+		typeSon[i] = setTypes(node->son[i]);
+	}
+
+	int type = DT_UNDEFINED;
+
+	for(i=0;i<MAX_SONS; i++) {
+		int typeSons = typeSon[i];
+
+		if(typeSon[i] != DT_UNDEFINED) {
+			if(type == DT_UNDEFINED) {
+				type = typeSons;
+			}
+			else {
+
+			}
+		}
+	}
+
+	return type;
+}
+
+void checkTypes(ASTREE *node) {
+	
 }

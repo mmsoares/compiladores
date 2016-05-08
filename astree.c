@@ -20,9 +20,9 @@ ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *son0, ASTREE *son1, AS
 	return newnode;
 }
 
-void defineHashDataType(HASH_NODE *symbol, int type) {
+void defineHashDataType(HASH_NODE *symbol, int type, ASTREE *declaration) {
 	//fprintf(stderr, "setting data type %d for symbol %s\n", type, symbol->text);
-	if(symbol->dataType == DT_UNDEFINED) {
+	if(symbol->dataType == DT_NOT_SET) {
 		switch(type) {
 			case AST_KW_INT:
 				symbol->dataType = DT_INT;
@@ -39,6 +39,10 @@ void defineHashDataType(HASH_NODE *symbol, int type) {
 			default: break;
 		}
 	}
+	
+	declaration->dataType = symbol->dataType;
+	declaration->son[0]->dataType = symbol->dataType;
+	symbol->declaration = declaration;
 }
 
 void printNode(ASTREE *node, int level) {
@@ -105,16 +109,43 @@ void printNode(ASTREE *node, int level) {
       	case AST_SYMBOL_FUN:  fprintf(stderr, "AST_SYMBOL_FUN"); break;
 
 
-		default: fprintf(stderr, "UNKNOWN"); 
+		default: fprintf(stderr, "UNKNOWN "); 
 				 fprintf(stderr, "Node type: %d\n", node->type);
 				 break;
 	}
 	if(node->symbol) {
-		fprintf(stderr, ",%s", node->symbol->text);
-		fprintf(stderr, ", %d", node->symbol->dataType);
+		fprintf(stderr, ", %s", node->symbol->text);
 	}
+	printDataType(node);
 
 	fprintf(stderr, "\n");
+}
+
+void printDataType(ASTREE *node) {
+	if(node->dataType) {
+		switch(node->dataType) {
+			case DT_INT:
+				fprintf(stderr, ", DT_INT");
+				break;			
+			case DT_CHAR:
+				fprintf(stderr, ", DT_CHAR");
+				break;			
+			case DT_REAL:
+				fprintf(stderr, ", DT_REAL");
+				break;			
+			case DT_BOOL:
+				fprintf(stderr, ", DT_BOOL");
+				break;			
+			case DT_UNDEFINED:
+				fprintf(stderr, ", DT_UNDEFINED");
+				break;
+			default:
+				break;
+		}
+	}
+	else {
+		fprintf(stderr, ", DT_NOT_SET");
+	}
 }
 
 void asTreePrintNodeWithDirectChildren(ASTREE* node) {
