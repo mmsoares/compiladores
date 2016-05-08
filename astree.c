@@ -16,7 +16,7 @@ ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *son0, ASTREE *son1, AS
 	newnode->son[1] = son1;
 	newnode->son[2] = son2;
 	newnode->son[3] = son3;
-	
+
 	return newnode;
 }
 
@@ -99,8 +99,11 @@ void printNode(ASTREE *node, int level) {
 		case AST_LIT_STRING: 	fprintf(stderr,"AST_LIT_STRING"); break;
 		case AST_BLOCO:			fprintf(stderr,"AST_BLOCO"); break;
 		case AST_IDENTIFIER:    fprintf(stderr, "AST_IDENTIFIER"); break;
-		case AST_COMANDO_VAZIO:    fprintf(stderr, "AST_COMANDO_VAZIO"); break;
-      case AST_SYMBOL:  fprintf(stderr, "AST_SYMBOL"); break;
+		case AST_COMANDO_VAZIO: fprintf(stderr, "AST_COMANDO_VAZIO"); break;
+      	case AST_SYMBOL_VAR:  fprintf(stderr, "AST_SYMBOL_VAR"); break;
+      	case AST_SYMBOL_VET:  fprintf(stderr, "AST_SYMBOL_VET"); break;
+      	case AST_SYMBOL_FUN:  fprintf(stderr, "AST_SYMBOL_FUN"); break;
+
 
 		default: fprintf(stderr, "UNKNOWN"); 
 				 fprintf(stderr, "Node type: %d\n", node->type);

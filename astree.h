@@ -57,6 +57,9 @@
 #define AST_DECLARACOES     149
 #define AST_COMANDO_VAZIO 150
 #define AST_SYMBOL 283
+#define AST_SYMBOL_VAR  300
+#define AST_SYMBOL_VET  301
+#define AST_SYMBOL_FUN  302
 
 
 typedef struct astree_struct {

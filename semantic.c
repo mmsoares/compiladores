@@ -112,30 +112,24 @@ void checkUsage(ASTREE* node) {
 	if(node==0) return;
 
 	switch(node->type) {
-		case AST_CHAMADA_FUNCAO:
-			if(node->son[0]->symbol->nature != NATURE_ESCALAR) {
+		case AST_SYMBOL_FUN:
+			if(node->symbol->nature != NATURE_FUNCAO) {
 				fprintf(stderr, "Uso incorreto do identificador %s como funcao\n", node->symbol->text);
 				exit(4);
 			}		
 			break;
-		case AST_VARIAVEL:
-			if(node->son[0]->symbol->nature != NATURE_ESCALAR) {
+		case AST_SYMBOL_VAR:
+			if(node->symbol->nature != NATURE_ESCALAR) {
 				fprintf(stderr, "Uso incorreto do identificador %s como escalar\n", node->symbol->text);
 				exit(4);
 			}
 			break;
-		case AST_ACESSO_VETOR:
-			if(node->son[0]->symbol->nature != NATURE_ESCALAR) {
+		case AST_SYMBOL_VET:
+			if(node->symbol->nature != NATURE_VETOR) {
 				fprintf(stderr, "Uso incorreto do identificador %s como vetor\n", node->symbol->text);
 				exit(4);
 			}		
 			break;
-		case AST_ATRIBUICAO_VETOR:
-			if(node->son[0]->symbol->nature != NATURE_ESCALAR) {
-				fprintf(stderr, "Uso incorreto do identificador %s como vetor\n", node->symbol->text);
-				exit(4);
-			}				
-			break;	
 		default:
 			break;
 	}

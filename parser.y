@@ -87,7 +87,9 @@ int yydebug = 1;
 %type <ast> return
 %type <ast> tipo
 %type <ast> literal
-%type <ast> identificador
+%type <ast> identificadorVar
+%type <ast> identificadorFun
+%type <ast> identificadorVet
 
 
 %start  programa
@@ -112,19 +114,23 @@ declaracao: variavel {$$=$1;}
           | funcao   {$$=$1;}
           ;
 
-identificador: TK_IDENTIFIER  { $$ = astreeCreate(AST_SYMBOL, $1, 0,0,0,0); }
+identificadorVar: TK_IDENTIFIER  { $$ = astreeCreate(AST_SYMBOL_VAR, $1, 0,0,0,0); }
 
-variavel: tipo identificador ':' literal {
+identificadorFun: TK_IDENTIFIER  { $$ = astreeCreate(AST_SYMBOL_FUN, $1, 0,0,0,0); }
+
+identificadorVet: TK_IDENTIFIER  { $$ = astreeCreate(AST_SYMBOL_VET, $1, 0,0,0,0); }
+
+variavel: tipo identificadorVar ':' literal {
 															$$ = astreeCreate(AST_VARIAVEL,0,$2,$1,$4,0);
 															defineDataType($2->symbol, $1->type);
 														}
             ;
 
-vetor: tipo identificador '[' LIT_INT ']'      {
+vetor: tipo identificadorVet '[' LIT_INT ']'      {
                                                 $$ = astreeCreate(AST_VETOR_VAZIO,0,$2,$1,astreeCreate(AST_LIT_INT,$4,0,0,0,0),0);
 																defineDataType($2->symbol, $1->type);
 															  }
-     | tipo identificador '[' LIT_INT ']' ':' inicializacaovetor {
+     | tipo identificadorVet '[' LIT_INT ']' ':' inicializacaovetor {
 																						$$ = astreeCreate(AST_VETOR,0,$2,$1,astreeCreate(AST_LIT_INT,$4,0,0,0,0),$7);
 																						defineDataType($2->symbol, $1->type);
 																						}
@@ -137,13 +143,13 @@ listaliterais: literal listaliterais    {$$ = astreeCreate(AST_LISTA_LITERAIS,0,
          |                        {$$=0;}
              ;
 
-funcao: tipo identificador '(' parametros ')' comando {
+funcao: tipo identificadorFun '(' parametros ')' comando {
 																				$$ = astreeCreate(AST_FUNCAO,0,$2,$1,$4,$6);
 																				defineDataType($2->symbol, $1->type);
 																		}
     ;  
 
-parametro: tipo identificador   {
+parametro: tipo identificadorVar   {
 												$$ = astreeCreate(AST_PARAMETRO,0,$2,$1,0,0);
 												defineDataType($2->symbol, $1->type);
 											}
@@ -193,9 +199,9 @@ restodalistadeparametroschamada: ',' parametroschamada  {$$=$2;}
 
 
 
-expressao:  identificador       {$$ = astreeCreate(AST_SYMBOL,0,$1,0,0,0);}
-        | identificador '[' expressao ']'   {$$ = astreeCreate(AST_ACESSO_VETOR,0,$1,$3,0,0);}
-        | identificador '(' parametroschamada ')' {$$ = astreeCreate(AST_CHAMADA_FUNCAO,0,$1,$3,0,0);}
+expressao:  identificadorVar       {$$ = astreeCreate(AST_SYMBOL,0,$1,0,0,0);}
+        | identificadorVet '[' expressao ']'   {$$ = astreeCreate(AST_ACESSO_VETOR,0,$1,$3,0,0);}
+        | identificadorFun '(' parametroschamada ')' {$$ = astreeCreate(AST_CHAMADA_FUNCAO,0,$1,$3,0,0);}
         | literal         {$$=$1;}
         | '(' expressao ')'       {$$ = astreeCreate(AST_EXPRESSAO_PARENTESES,0,$2,0,0,0);}
         | expressao '+' expressao     {$$ = astreeCreate(AST_OP_SOMA,0,$1,$3,0,0);}
@@ -214,8 +220,8 @@ expressao:  identificador       {$$ = astreeCreate(AST_SYMBOL,0,$1,0,0,0);}
 
         
 
-atribuicao: identificador '=' expressao       {$$ = astreeCreate(AST_ATRIBUICAO,0,$1,$3,0,0);}
-            |   identificador'[' expressao ']' '=' expressao  {$$ = astreeCreate(AST_ATRIBUICAO_VETOR,0,$1,$3,$6,0);}
+atribuicao: identificadorVar '=' expressao       {$$ = astreeCreate(AST_ATRIBUICAO,0,$1,$3,0,0);}
+            |   identificadorVet'[' expressao ']' '=' expressao  {$$ = astreeCreate(AST_ATRIBUICAO_VETOR,0,$1,$3,$6,0);}
         ;
 
         
@@ -232,7 +238,7 @@ input: KW_INPUT listadevariaveis  {$$ = astreeCreate(AST_INPUT,0,$2,0,0,0);}
 
         
 
-listadevariaveis: identificador restolistadevariaveis {$$ = astreeCreate(AST_LISTA_VARIAVEIS,0,$1,$2,0,0);}
+listadevariaveis: identificadorVar restolistadevariaveis {$$ = astreeCreate(AST_LISTA_VARIAVEIS,0,$1,$2,0,0);}
                         ;
 
 
