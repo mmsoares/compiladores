@@ -122,17 +122,17 @@ identificadorVet: TK_IDENTIFIER  { $$ = astreeCreate(AST_SYMBOL_VET, $1, 0,0,0,0
 
 variavel: tipo identificadorVar ':' literal {
 															$$ = astreeCreate(AST_VARIAVEL,0,$2,$1,$4,0);
-															defineDataType($2->symbol, $1->type);
+															defineHashDataType($2->symbol, $1->type);
 														}
             ;
 
 vetor: tipo identificadorVet '[' LIT_INT ']'      {
                                                 $$ = astreeCreate(AST_VETOR_VAZIO,0,$2,$1,astreeCreate(AST_LIT_INT,$4,0,0,0,0),0);
-																defineDataType($2->symbol, $1->type);
+																defineHashDataType($2->symbol, $1->type);
 															  }
      | tipo identificadorVet '[' LIT_INT ']' ':' inicializacaovetor {
 																						$$ = astreeCreate(AST_VETOR,0,$2,$1,astreeCreate(AST_LIT_INT,$4,0,0,0,0),$7);
-																						defineDataType($2->symbol, $1->type);
+																						defineHashDataType($2->symbol, $1->type);
 																						}
      ;
 
@@ -145,13 +145,13 @@ listaliterais: literal listaliterais    {$$ = astreeCreate(AST_LISTA_LITERAIS,0,
 
 funcao: tipo identificadorFun '(' parametros ')' comando {
 																				$$ = astreeCreate(AST_FUNCAO,0,$2,$1,$4,$6);
-																				defineDataType($2->symbol, $1->type);
+																				defineHashDataType($2->symbol, $1->type);
 																		}
     ;  
 
 parametro: tipo identificadorVar   {
 												$$ = astreeCreate(AST_PARAMETRO,0,$2,$1,0,0);
-												defineDataType($2->symbol, $1->type);
+												defineHashDataType($2->symbol, $1->type);
 											}
          ;
 
@@ -199,7 +199,7 @@ restodalistadeparametroschamada: ',' parametroschamada  {$$=$2;}
 
 
 
-expressao:  identificadorVar       {$$ = astreeCreate(AST_SYMBOL,0,$1,0,0,0);}
+expressao:  identificadorVar       {$$ = astreeCreate(AST_VARIAVEL,0,$1,0,0,0);}
         | identificadorVet '[' expressao ']'   {$$ = astreeCreate(AST_ACESSO_VETOR,0,$1,$3,0,0);}
         | identificadorFun '(' parametroschamada ')' {$$ = astreeCreate(AST_CHAMADA_FUNCAO,0,$1,$3,0,0);}
         | literal         {$$=$1;}

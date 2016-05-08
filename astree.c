@@ -20,7 +20,7 @@ ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *son0, ASTREE *son1, AS
 	return newnode;
 }
 
-void defineDataType(HASH_NODE *symbol, int type) {
+void defineHashDataType(HASH_NODE *symbol, int type) {
 	//fprintf(stderr, "setting data type %d for symbol %s\n", type, symbol->text);
 	if(symbol->dataType == DT_UNDEFINED) {
 		switch(type) {

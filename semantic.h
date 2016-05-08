@@ -5,10 +5,11 @@
 #include "hash.h"
 
 void performSemanticValidations(HASH_NODE* hashmap, ASTREE* syntaxtree);
+void setNature(ASTREE *root);
 int  getSymbolDeclarations(HASH_NODE *node, ASTREE *root);
 void checkDeclaration(ASTREE* syntaxtree);
-void checkUsage(ASTREE* syntaxtree);
-void checkTypes(ASTREE* syntaxtree);
-void checkCodeType(ASTREE* functionType, ASTREE* functionName, ASTREE* node);
+void checkUsage(ASTREE* node);
+void checkParameters(ASTREE* node);
+//int checkType(ASTREE* node);
 
 #endif

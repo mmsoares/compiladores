@@ -31,7 +31,7 @@ typedef struct hash_node_struct{
 	char *text;
 	int dataType;
 	int nature;
-	struct astree_struct *declaration;
+	struct ASTREE *declaration;
 	struct hash_node_struct *next;
 } HASH_NODE;
 
