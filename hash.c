@@ -35,7 +35,6 @@ HASH_NODE *hashInsert(char *text, int type){
 
 	HASH_NODE *newnode;
 	if(hashFind(text)!= NULL){
-		fprintf(stderr, "Returning without creating\n");
 		return hashFind(text);
 	}
 	int address = hashAddress(text);

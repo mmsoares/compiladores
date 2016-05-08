@@ -5,30 +5,33 @@
 #include "y.tab.h"
 #include "semantic.h"
 
-void performSemanticValidations(struct hash_node_struct* hashmap, struct astree_struct* syntaxtree) {
+void performSemanticValidations(HASH_NODE* hashmap, ASTREE* syntaxtree) {
 	fprintf(stderr, "going to check declarations\n");
 	checkDeclaration(syntaxtree);
-	fprintf(stderr, "going to check for Undeclared variables\n");
-	checkUndeclaredVariables(hashmap);
 	fprintf(stderr, "going to check types\n");
 	checkTypes(syntaxtree);
 }
 
-void checkDuplicateDeclaration(struct astree_struct* node) {
-	/*  Loopar na hash table e pra cada simbolo que tá lá, ver se existe
-	      uma e somente uma declaração pra ele.
-	    Assim, verificamos tanto simbolos não declarados quanto simbolos
-	      redeclarados.
-	    OBS: a declaração pode ser como parâmetro da função
-	*/
+int getSymbolDeclarations(HASH_NODE *node, ASTREE *root) {
+	int numOfDeclarations = 0;
+	ASTREE *declarations;
+
+	for(declarations = root->son[0];declarations!=NULL;declarations=declarations->son[1]) {
+		if(strcmp(declarations->son[0]->son[0]->symbol->text, node->text)==0){
+			numOfDeclarations++;
+		}		
+	}
+
+	return numOfDeclarations;
+}
+
+void checkDeclaration(ASTREE* root) {
 	int i;
 	HASH_NODE *hashNode = 0;
 	for(i=0;i<HASH_SIZE;i++) {
 		for(hashNode=Table[i];hashNode;hashNode=hashNode->next) {
 			if(hashNode->type == SYMBOL_IDENTIFIER) {
-				int declarations = 0;
-
-				//verificar se há alguma declaração deste simbolo
+				int declarations = getSymbolDeclarations(hashNode, root);
 
 				if(declarations == 0) {
 					fprintf(stderr, "Erro: simbolo %s nao foi declarado!\n", hashNode->text);
@@ -43,65 +46,10 @@ void checkDuplicateDeclaration(struct astree_struct* node) {
 	}
 }
 
-void checkDeclaration(struct astree_struct* syntaxtree) {
-	struct astree_struct* declaration;
-	struct astree_struct* declarations = syntaxtree->son[0];
-
-	checkDuplicateDeclaration(syntaxtree);
-	//asTreePrintNodeWithDirectChildren(declarations->son[0]);
-	for(declaration=declarations->son[1];declaration;declaration=declaration->son[1]) {
-		//asTreePrintNodeWithDirectChildren(declaration);
-	}
-
-/*
-	fprintf(stderr, "starting checkDeclaration\n");
-
-	for (program = syntaxtree; program; program = program->son[0]) {
-		fprintf(stderr, "starting for loop\n");
-		declaration = program->son[1];
-		type = declaration->son[0];
-		identifier = declaration->son[1];
-
-		fprintf(stderr, "set variables\n");
-
-		if (identifier->symbol->type != SYMBOL_IDENTIFIER) {
-			fprintf(stderr, "Erro: %s ja foi declarada.\n", identifier->symbol->text);
-			exit(4);
-		}
-
-		fprintf(stderr, "checked if variable was already declared\n");
-
-		identifier->symbol->declaration = declaration;
-
-		switch (declaration->type) {
-			case AST_VARIAVEL :
-				identifier->symbol->type = SYMBOL_VARIABLE;
-				break;
-			case AST_VETOR_VAZIO:
-			case AST_VETOR:
-				identifier->symbol->type = SYMBOL_VECTOR;
-				break;			
-			case AST_FUNCAO :
-				identifier->symbol->type = SYMBOL_FUNCTION;
-				checkParameterDeclaration(declaration->son[2]);
-				break;
-			default:
-				fprintf(stderr, "Erro: declaracao de tipo desconhecido");
-				exit(4);
-		}
-		identifier->dataType = identifier->symbol->dataType;
-		identifier->nature = identifier->symbol->type;
-		declaration->symbol = identifier->symbol;
-		declaration->dataType = identifier->dataType;
-		declaration->nature = identifier->type;
-	}
-	*/
-}
-
-void checkParameterDeclaration(struct astree_struct* parameterList) {
-/*	struct astree_struct* parameter;
-	struct astree_struct* type;
-	struct astree_struct* identifier;
+void checkParameterDeclaration(ASTREE* parameterList) {
+/*	ASTREE* parameter;
+	ASTREE* type;
+	ASTREE* identifier;
 	for (; list; list = list->son[1]) {
 		parameter = list->son[0];
 		type = parameter->son[0];
@@ -118,22 +66,7 @@ void checkParameterDeclaration(struct astree_struct* parameterList) {
 	*/
 }
 
-void checkUndeclaredVariables(struct hash_node_struct* hashmap) {
-	/*
-	int index;
-	struct hash_node_struct* node;
-	for (index = 0; index < hashmap->size; ++index) {
-		for (node = hashmap->entries[index]; node != NULL; node = node->next) {
-			if (node->type == SYMBOL_IDENTIFIER) {
-				printf("SEMANTIC ERROR: Undeclared variable %s.\n", node->text);
-				exit(4);
-			}
-		}
-	}
-	*/
-}
-
-void checkTypes(struct astree_struct* syntaxtree) {
+void checkTypes(ASTREE* syntaxtree) {
 	/*
 	for (; list; list = list->son[0]) {
 		if (list->son[1]->type == FUNCTION_DECLARATION) {
@@ -143,9 +76,9 @@ void checkTypes(struct astree_struct* syntaxtree) {
 	*/
 }
 
-void checkCodeType(struct astree_struct* functionType, struct astree_struct* functionName, struct astree_struct* node) {
+void checkCodeType(ASTREE* functionType, ASTREE* functionName, ASTREE* node) {
 	
-	/*struct astree_struct* list;
+	/*ASTREE* list;
 	switch (node->type) {
 		case BLOCK :
 			for (list = node->son[0]; list; list = list->son[1]) {
@@ -217,8 +150,8 @@ void checkCodeType(struct astree_struct* functionType, struct astree_struct* fun
 				exit(4);
 			}
 			{
-				struct astree_struct* parameterlist;
-				struct astree_struct* argumentlist;
+				ASTREE* parameterlist;
+				ASTREE* argumentlist;
 				parameterlist = node->son[0]->symbol->declaration->son[2];
 				argumentlist = node->son[1];
 				while (parameterlist && argumentlist) {

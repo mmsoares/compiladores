@@ -2,12 +2,13 @@
 #define HEADER_SEMANTIC
 
 #include "astree.h"
+#include "hash.h"
 
-void performSemanticValidations(struct hash_node_struct* hashmap, struct astree_struct* syntaxtree);
-void checkDeclaration(struct astree_struct* syntaxtree);
-void checkParameterDeclaration(struct astree_struct* parameterList);
-void checkUndeclaredVariables(struct hash_node_struct* hashmap);
-void checkTypes(struct astree_struct* syntaxtree);
-void checkCodeType(struct astree_struct* functionType, struct astree_struct* functionName, struct astree_struct* node);
+void performSemanticValidations(HASH_NODE* hashmap, ASTREE* syntaxtree);
+int  getSymbolDeclarations(HASH_NODE *node, ASTREE *root);
+void checkDeclaration(ASTREE* syntaxtree);
+void checkParameterDeclaration(ASTREE* parameterList);
+void checkTypes(ASTREE* syntaxtree);
+void checkCodeType(ASTREE* functionType, ASTREE* functionName, ASTREE* node);
 
 #endif
