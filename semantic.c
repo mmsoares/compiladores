@@ -16,7 +16,7 @@ void performSemanticValidations(HASH_NODE* hashmap, ASTREE* syntaxtree) {
 	setTypesToAttrAndOperations(syntaxtree);
 	searchFunctions(syntaxtree);
 	checkFunctionParameters(syntaxtree);
-	//astreePrint(syntaxtree, 0);
+	astreePrint(syntaxtree, 0);
 }
 
 void setNature(ASTREE *root) {
@@ -361,7 +361,6 @@ void checkParameterCompatibility(int type1, int type2){
 		}
 	}
 }
-
 void checkFunctionParameters(ASTREE *node) {
 	if(node==0) return;
 	int i;
@@ -384,8 +383,15 @@ void checkFunctionParameters(ASTREE *node) {
 
 				checkParameterCompatibility(node->son[1]->dataType,declaration->son[2]->son[1]->dataType);
 			}
-			//se a declaração tem dois ou mais parametros
+			//se a declaração tem dois parametros
 			else if(declaration->son[2]->type == AST_LISTA_PARAMETRO) {
+				if(declaration->son[2]->son[1]->type == AST_PARAMETRO){
+
+				}
+				//se a declaração tem mais de dois parametros
+				else {
+
+				}
 				ASTREE *declarationParam = declaration->son[2];
 				ASTREE *callParam = node->son[1];
 
