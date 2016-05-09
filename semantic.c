@@ -13,9 +13,10 @@ void performSemanticValidations(HASH_NODE* hashmap, ASTREE* syntaxtree) {
 	setDataTypeToVarUsage(syntaxtree);
 	setUndefinedDataTypes(syntaxtree);
 	setDataTypeToVarFather(syntaxtree);
-	checkFunctionParameters(syntaxtree);
 	setTypesToAttrAndOperations(syntaxtree);
-	astreePrint(syntaxtree, 0);
+	searchFunctions(syntaxtree);
+	checkFunctionParameters(syntaxtree);
+	//astreePrint(syntaxtree, 0);
 }
 
 void setNature(ASTREE *root) {
@@ -388,6 +389,8 @@ void checkFunctionParameters(ASTREE *node) {
 				ASTREE *declarationParam = declaration->son[2];
 				ASTREE *callParam = node->son[1];
 
+				asTreePrintNodeWithDirectChildren(declaration);
+				asTreePrintNodeWithDirectChildren(node);
 				//if(!callParam->son[0]) exit(4);
 				//checkParameterCompatibility(declarationParam->son[0]->dataType, callParam->son[0]->dataType);
 			}
@@ -452,8 +455,11 @@ int setTypesToAttrAndOperations(ASTREE* node) {
 					exit(4);
 				}
 				type1 = setTypesToAttrAndOperations(node->son[2]);
-				node->dataType = getDominantType(type0, type1);
+				node->dataType = getDominantType(type0, type1, 0);
 				return node->dataType;
+			case AST_RETURN:
+		 	 	node->dataType = setTypesToAttrAndOperations(node->son[0]);
+		 	 	break;				
 			default:
 		 		return node->dataType;
 	  }
@@ -463,4 +469,38 @@ int setTypesToAttrAndOperations(ASTREE* node) {
 			setTypesToAttrAndOperations(node->son[i]);
 	  }  
  	}
+}
+
+void searchFunctions(ASTREE *node){
+	if(node==0) return;
+	int i;
+	
+	if(node->type == AST_FUNCAO){
+		checkReturns(node,node->dataType);
+	}
+	for(i=0;i<MAX_SONS;i++) {
+		searchFunctions(node->son[i]);
+	}	
+}
+void checkReturns(ASTREE *node, int functionType){
+	if(node==0) return;
+	int i;
+	
+	 if(node->type == AST_RETURN){
+		 if(node->dataType == DT_BOOL) {
+			  if(functionType != DT_BOOL) {
+				  	fprintf(stderr, "Error: erro de tipo no retorno entre %d e %d\n", node->dataType, functionType);
+					exit(4);
+			  }
+		 }
+		 else {
+			  if(functionType == DT_BOOL) {
+				  	fprintf(stderr, "Error: erro de tipo no retorno entre %d e %d\n", node->dataType, functionType);
+					exit(4);
+			  }
+		 }
+	}
+	for(i=0;i<MAX_SONS;i++) {
+		checkReturns(node->son[i], functionType);
+	}	
 }
