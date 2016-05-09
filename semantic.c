@@ -13,6 +13,7 @@ void performSemanticValidations(HASH_NODE* hashmap, ASTREE* syntaxtree) {
 	setDataTypeToVarUsage(syntaxtree);
 	setUndefinedDataTypes(syntaxtree);
 	setDataTypeToVarFather(syntaxtree);
+	checkTypesForVectorInitializations(syntaxtree);
 	setTypesToAttrAndOperations(syntaxtree);
 	searchFunctions(syntaxtree);
 	checkFunctionParameters(syntaxtree);
@@ -142,22 +143,6 @@ void checkUsage(ASTREE* node) {
 	}	
 }
 
-void checkParameters(ASTREE* node) {
-	/*
-	  procurar todas as chamadas de funcao e pra cada uma pegar quantos	
-	  e de que tipo são os parametros
-	  depois, procurar na definição da função pra ver se tem o número certo de 
-	  parâmetros e se eles são compatíveis
-	*/
- 	int i;
-	
-	if(node==0) return;
-
-	switch(node->type) {
-
-	}
-}
-
 void setDataTypeToVarKwAndLit(ASTREE *node) {
 	if(node==0) return;
 	int i;
@@ -280,6 +265,7 @@ void setDataTypeToVarFather(ASTREE *node) {
 	}	
 }
 
+//retorna o tipo dominante para expressões
 int getDominantType(int type1, int type2, int isDiv) {
 	if(type1 == DT_INT && type2 == DT_INT) {
 		if(isDiv==1) return DT_REAL;
@@ -346,6 +332,7 @@ int getDominantType(int type1, int type2, int isDiv) {
 	return DT_UNDEFINED;
 }
 
+//compara a compatibilidade de tipos de um parametro de declaração e outro de chamada de função
 void checkParameterCompatibility(int type1, int type2){
 	fprintf(stderr, "Checking compatibility between %d and %d\n", type1, type2);
 	if(type1 == DT_BOOL) {
@@ -361,6 +348,8 @@ void checkParameterCompatibility(int type1, int type2){
 		}
 	}
 }
+
+//checa tipos e quantidades de parametros para funções com 0, 1 e 2 parametros
 void checkFunctionParameters(ASTREE *node) {
 	if(node==0) return;
 	int i;
@@ -385,20 +374,29 @@ void checkFunctionParameters(ASTREE *node) {
 			}
 			//se a declaração tem dois parametros
 			else if(declaration->son[2]->type == AST_LISTA_PARAMETRO) {
-				if(declaration->son[2]->son[1]->type == AST_PARAMETRO){
-
+				
+				if(declaration->son[2]->son[0]->type == AST_PARAMETRO && declaration->son[2]->son[1]->type == AST_PARAMETRO){
+					if(!node->son[1]){
+						fprintf(stderr, "Erro: parametros de menos na funcao\n");
+						exit(4);
+					}
+					if(node->son[1]->type != AST_LISTA_PARAM_CHAMADA){
+						fprintf(stderr, "Erro: parametros de menos na chamada de funcao\n");
+						exit(4);
+					}
+					if(node->son[1]->type == AST_LISTA_PARAM_CHAMADA){
+						if(node->son[1]->son[1]->type == AST_LISTA_PARAM_CHAMADA){
+							fprintf(stderr, "Erro: parametros demais na chamada de funcao\n");
+						exit(4);
+						}
+					}
+					checkParameterCompatibility(node->son[1]->son[0]->dataType,declaration->son[2]->son[0]->dataType);
+					checkParameterCompatibility(node->son[1]->son[1]->dataType,declaration->son[2]->son[1]->dataType);
 				}
 				//se a declaração tem mais de dois parametros
 				else {
-
+					checkBiggerParameterLists(declaration->son[2], node->son[1]);
 				}
-				ASTREE *declarationParam = declaration->son[2];
-				ASTREE *callParam = node->son[1];
-
-				asTreePrintNodeWithDirectChildren(declaration);
-				asTreePrintNodeWithDirectChildren(node);
-				//if(!callParam->son[0]) exit(4);
-				//checkParameterCompatibility(declarationParam->son[0]->dataType, callParam->son[0]->dataType);
 			}
 		}
 		//se a declaração não tem parametro
@@ -413,6 +411,65 @@ void checkFunctionParameters(ASTREE *node) {
 	for(i=0;i<MAX_SONS;i++) {
 		checkFunctionParameters(node->son[i]);
 	}		
+}
+
+//checa tipos e quantidade de parametros caso a função tenha 3 ou mais parametros
+void checkBiggerParameterLists(ASTREE* declaration, ASTREE* call){
+
+	if((call->son[1]->type == AST_LISTA_PARAM_CHAMADA && declaration->son[1]->type != AST_LISTA_PARAMETRO) || (call->son[1]->type != AST_LISTA_PARAM_CHAMADA && declaration->son[1]->type == AST_LISTA_PARAMETRO)){
+		fprintf(stderr, "Erro: Parametros em quantidades diferentes da declaracao para a chamada\n");
+		exit(4);
+	}
+	else if(call->son[1]->type != AST_LISTA_PARAM_CHAMADA && declaration->son[1]->type != AST_LISTA_PARAMETRO){
+		checkParameterCompatibility(declaration->son[0]->dataType,call->son[0]->dataType);
+		checkParameterCompatibility(declaration->son[1]->dataType,call->son[1]->dataType);
+	}
+	else{
+		checkParameterCompatibility(declaration->son[0]->dataType,call->son[0]->dataType);
+		checkBiggerParameterLists(declaration->son[1], call->son[1]);
+	}
+}
+
+//busca vetores para checar os tipos numa inicialização
+void checkTypesForVectorInitializations(ASTREE* node) {
+	int i;
+	if(node==0) return 0;
+	int type0;
+	int type1;
+
+	if(node->type == AST_DECLARACOES && node->son[0]->type == AST_VETOR) {
+		checkTypesForVector(node->son[0]->son[3], node->son[0]->dataType);
+	}
+	else{
+	  for(i=0;i<MAX_SONS;i++) {
+			checkTypesForVectorInitializations(node->son[i]);
+	  }
+	}  
+}
+
+//checa os tipos de um vetor dado o vetor e o tipo ao qual ele foi declarado
+void checkTypesForVector(ASTREE* node, int vectorType){
+	if(!node->son[1]){
+		if((node->son[0]->dataType == DT_BOOL)&&(vectorType != DT_BOOL)){
+			fprintf(stderr, "Erro: Conflito de tipo numa inicializacao de vetor!\n");
+			exit(4);
+		}
+		if(((node->son[0]->dataType == DT_INT)||(node->son[0]->dataType == DT_REAL)||(node->son[0]->dataType == DT_CHAR))&&(vectorType == DT_BOOL)){
+			fprintf(stderr, "Erro: Conflito de tipo numa inicializacao de vetor!\n");
+			exit(4);
+		}
+	}
+	else{
+		if((node->son[0]->dataType == DT_BOOL)&&(vectorType != DT_BOOL)){
+			fprintf(stderr, "Erro: Conflito de tipo numa inicializacao de vetor!\n");
+			exit(4);
+		}
+		if(((node->son[0]->dataType == DT_INT)||(node->son[0]->dataType == DT_REAL)||(node->son[0]->dataType == DT_CHAR))&&(vectorType == DT_BOOL)){
+			fprintf(stderr, "Erro: Conflito de tipo numa inicializacao de vetor!\n");
+			exit(4);
+		}
+		checkTypesForVector(node->son[1],vectorType);
+	}
 }
 
 int setTypesToAttrAndOperations(ASTREE* node) {
