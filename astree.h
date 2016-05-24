@@ -69,9 +69,6 @@ typedef struct astree_struct {
     struct astree_struct *son[MAX_SONS];
 } ASTREE;
 
-//FILE    *inputFile;
-//FILE    *outputFile;
-
 ASTREE* astreeCreate(int type, struct hash_node_struct *symbol, ASTREE *s0, ASTREE *s1, ASTREE *s2, ASTREE *s3);
 void    defineHashDataType(struct hash_node_struct *symbol, int type, ASTREE *declaration);
 void    printDataType(ASTREE *node);

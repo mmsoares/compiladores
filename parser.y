@@ -101,6 +101,7 @@ programa: declaracoes     {
             //astreePrint ($$,0);
             //decompile($$);
             performSemanticValidations(Table, $$);
+            printTacListReverse(generateTacCode($$));
               }
          |            {  $$=astreeCreate(AST_PROGRAMA,0,0,0,0,0); }
          ;

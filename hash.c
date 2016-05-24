@@ -59,3 +59,15 @@ void hashPrint(void){
 			printf("Table[%d] = type: %d, value: %s, dataType: %d, nature: %d\n",i,node->type, node->text, node->dataType, node->nature);
 	
 }
+
+HASH_NODE* makeLabel() {
+	char label[256];
+	sprintf(label, "_label%d", labelCounter++);
+	return hashInsert(label, SYMBOL_LABEL);
+}
+
+HASH_NODE* makeTemp() {
+	char temp[256];
+	sprintf(temp, "_temp%d", tempCounter++);
+	return hashInsert(temp, SYMBOL_TEMP);
+}

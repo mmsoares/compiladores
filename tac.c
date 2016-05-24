@@ -5,7 +5,7 @@
 int labelCounter = 0;
 int tempCounter = 0;
 
-TAC_NODE* tac_createNode(int type, HASH_NODE* result, HASH_NODE* operation1, HASH_NODE* operation2) {
+TAC_NODE* createTacNode(int type, HASH_NODE* result, HASH_NODE* operation1, HASH_NODE* operation2) {
 	TAC_NODE* node = 0;
 	node = (TAC_NODE*) calloc(1, sizeof(TAC_NODE));
 	node->type = type;
@@ -17,7 +17,7 @@ TAC_NODE* tac_createNode(int type, HASH_NODE* result, HASH_NODE* operation1, HAS
 	return node;
 }
 
-TAC_NODE* tac_join(TAC_NODE* tac1, TAC_NODE* tac2) {
+TAC_NODE* joinTacs(TAC_NODE* tac1, TAC_NODE* tac2) {
 	if(tac1==NULL) return tac2;
 	if(tac2==NULL) return tac1;
 
@@ -116,16 +116,4 @@ void printTacListReverse(TAC_NODE* tac) {
 		printTacListReverse(tac->previous);
 		printTacNode(tac);
 	}
-}
-
-char* makeLabel() {
-	char label[256];
-	sprintf(label, "Label_%d", labelCounter++);
-	return label;
-}
-
-char* makeTemp() {
-	char temp[256];
-	sprintf(temp, "Temp_%d", tempCounter++);
-	return temp;
 }

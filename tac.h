@@ -4,57 +4,24 @@
 #include "hash.h"
 #include "astree.h"
 
-#define TAC_SYMBOL			01
-#define TAC_VECTOR			02
-#define TAC_LITERAL			03
-#define TAC_LABEL			04
-#define TAC_TEMP			05
-#define TAC_POINTER			06
-#define TAC_ADDRESS			07
+#define TAC_SYMBOL 1
+#define TAC_MOVE   2
+#define TAC_ADD    3
+#define TAC_SUB    4
+#define TAC_MUL	   5
+#define TAC_DIV    6
 
-#define TAC_OP_PLUS			11
-#define TAC_OP_MINUS		12
-#define TAC_OP_TIMES		13
-#define TAC_OP_DIVIDE		14
-#define TAC_OP_MODULE		15
+#define TAC_LABEL  20
 
-#define TAC_OP_EQUAL		21
-#define TAC_OP_NOTEQUAL		22
-#define TAC_OP_LESSER		23
-#define TAC_OP_GREATER		24
-#define TAC_OP_LESSEREQUAL	25
-#define TAC_OP_GREATEREQUAL	26
-#define TAC_OP_AND			27
-#define TAC_OP_OR			28
-#define TAC_OP_NOT			29
-
-#define TAC_ASSIGN_VAR		31
-#define TAC_JUMP			32
-#define TAC_IF_THEN			33
-#define TAC_IF_ELSE			34
-#define TAC_OUTPUT			35
-#define TAC_INPUT			36
-#define TAC_RETURN			37
-
-#define TAC_WORD			41
-#define TAC_BOOL			42
-#define TAC_BYTE			43
-
-#define TAC_VARIABLE_DECLARATION	51
-
-#define TAC_FUNCTION_DECLARATION	61 
-#define TAC_FUNCTION_PARAMS			62
-#define TAC_FUNCTION_BEGIN			63
-#define TAC_FUNCTION_END			64
-#define TAC_FUNCTION_CALL			65
-#define TAC_FUNCTION_ARGUMENTS		66
-
-#define TAC_VECTOR_DECLARATION		71
-#define TAC_VECTOR_INIT				72
-#define TAC_VECTOR_READ				73
-#define TAC_VECTOR_WRITE			74
-
-#define TAC_POINTER_DECLARATION		82
+#define TAC_BEGINFUN 21
+#define TAC_ENDFUN   22
+#define TAC_IFZ      23
+#define TAC_JUMP     24
+#define TAC_CALL     25
+#define TAC_ARG      26
+#define TAC_RET      27
+#define TAC_PRINT    28
+#define TAC_READ     29
 
 
 typedef struct tac_node {
@@ -86,8 +53,5 @@ TAC_NODE* tac_createOutput(TAC_NODE* expression, TAC_NODE* next);
 void printTacNode(TAC_NODE* tac);
 void printTacList(TAC_NODE* tac);
 void printTacListReverse(TAC_NODE* tac);
-
-char* makeLabel();
-char* makeTemp();
 
 #endif

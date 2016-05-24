@@ -10,6 +10,8 @@
 #define SYMBOL_LIT_CHAR   5
 #define SYMBOL_LIT_STRING 6
 #define SYMBOL_IDENTIFIER 7
+#define SYMBOL_TEMP       8
+#define SYMBOL_LABEL      9
 
 #define DT_INT       100
 #define DT_CHAR      101
@@ -43,5 +45,7 @@ int hashAddress(char *text);
 HASH_NODE *hashFind(char *text);
 HASH_NODE *hashInsert(char *text, int type);
 void hashPrint(void);
+HASH_NODE* makeLabel();
+HASH_NODE* makeTemp();
 
 #endif
