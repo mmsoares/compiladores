@@ -1,8 +1,10 @@
-/* begin standard C headers. */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "hash.h"
+
+int labelCounter = 0;
+int tempCounter = 0;
 
 void hashInit(void){
 	int i;

@@ -16,7 +16,6 @@ void performSemanticValidations(HASH_NODE* hashmap, ASTREE* syntaxtree) {
 	setTypesToAttrAndOperations(syntaxtree);
 	searchFunctions(syntaxtree);
 	checkFunctionParameters(syntaxtree);
-	astreePrint(syntaxtree, 0);
 }
 
 void setNature(ASTREE *root) {

@@ -4,24 +4,30 @@
 #include "hash.h"
 #include "astree.h"
 
-#define TAC_SYMBOL 1
-#define TAC_MOVE   2
-#define TAC_ADD    3
-#define TAC_SUB    4
-#define TAC_MUL	   5
-#define TAC_DIV    6
+#define TAC_DECLARACAO_VARIAVEL 1
+#define TAC_DECLARACAO_VETOR 2
 
-#define TAC_LABEL  20
+#define TAC_KW_INT 20
+#define TAC_KW_BOOL 21
+#define TAC_KW_CHAR 22
+#define TAC_KW_REAL 23
 
-#define TAC_BEGINFUN 21
-#define TAC_ENDFUN   22
-#define TAC_IFZ      23
-#define TAC_JUMP     24
-#define TAC_CALL     25
-#define TAC_ARG      26
-#define TAC_RET      27
-#define TAC_PRINT    28
-#define TAC_READ     29
+#define TAC_SYMBOL 30
+#define TAC_OP_SOMA 31
+#define TAC_OP_SUB 32
+#define TAC_OP_MUL 33
+#define TAC_OP_DIV 34
+#define TAC_OP_MENOR 35
+#define TAC_OP_MAIOR 36
+#define TAC_OP_LE 37
+#define TAC_OP_GE 38
+#define TAC_OP_EQ 39
+#define TAC_OP_NE 40
+#define TAC_OP_AND 41
+#define TAC_OP_OR 42
+
+#define TAC_SYMBOL_VAR 50
+#define TAC_SYMBOL_VET 51
 
 
 typedef struct tac_node {

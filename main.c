@@ -25,6 +25,5 @@ int main(int argc, char **argv)
 		exit (2);
 	}
 	yyparse();
-    //hashPrint();
 	return 0;
 }

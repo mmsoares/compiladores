@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int labelCounter = 0;
-int tempCounter = 0;
-
 TAC_NODE* createTacNode(int type, HASH_NODE* result, HASH_NODE* operation1, HASH_NODE* operation2) {
 	TAC_NODE* node = 0;
 	node = (TAC_NODE*) calloc(1, sizeof(TAC_NODE));
@@ -28,7 +25,110 @@ TAC_NODE* joinTacs(TAC_NODE* tac1, TAC_NODE* tac2) {
 }
 
 TAC_NODE* generateTacCode(ASTREE* syntaxtree) {
+	int i;
 
+	TAC_NODE* code[MAX_SONS];
+
+	for(i=0; i < MAX_SONS; i++) {
+		code[i] = NULL;
+	}
+
+	if(syntaxtree == NULL) return NULL;
+
+	for (i=0; i < MAX_SONS; i++) {
+		code[i] = generateTacCode(syntaxtree->son[i]);
+	}
+		
+	switch (syntaxtree->type) {
+		 case AST_PROGRAMA:
+		 	return code[0];
+		 case AST_DECLARACOES:
+		 	return joinTacs(code[0], code[1]);
+		 case AST_VARIAVEL:
+		 	return createTacNode(TAC_DECLARACAO_VARIAVEL, code[0]->result, code[2]->result, NULL);
+		 case AST_VETOR_VAZIO:
+		 case AST_VETOR:
+			return createTacNode(TAC_DECLARACAO_VETOR, code[0]->result, code[2]->result, code[3]->result);
+		 case AST_INI_VETOR:
+		 	
+		 case AST_LISTA_LITERAIS:
+		 case AST_FUNCAO:
+		 case AST_PARAMETRO:
+		 case AST_LISTA_PARAMETRO:
+		 case AST_COMANDOS:
+		 	return NULL;
+		 case AST_BLOCO:
+		 case AST_LISTA_PARAM_CHAMADA:
+		 case AST_ACESSO_VETOR:
+		 case AST_CHAMADA_FUNCAO:
+		 case AST_EXPRESSAO_PARENTESES:
+		 case AST_OP_SOMA:
+		 	return tac_createOperation(TAC_OP_SOMA, code[0], code[1]);
+		 case AST_OP_SUB:
+		 	return tac_createOperation(TAC_OP_SUB, code[0], code[1]);
+		 case AST_OP_MUL:
+			 return tac_createOperation(TAC_OP_MUL, code[0], code[1]);
+		 case AST_OP_DIV:
+		 	return tac_createOperation(TAC_OP_DIV, code[0], code[1]);
+		 case AST_OP_MENOR:
+		 	return tac_createOperation(TAC_OP_MENOR, code[0], code[1]);
+		 case AST_OP_MAIOR:
+		 	return tac_createOperation(TAC_OP_MAIOR, code[0], code[1]);
+		 case AST_OP_LE:
+		 	return tac_createOperation(TAC_OP_LE, code[0], code[1]);
+		 case AST_OP_GE:
+		 	return tac_createOperation(TAC_OP_GE, code[0], code[1]);
+		 case AST_OP_EQ:
+		 	return tac_createOperation(TAC_OP_EQ, code[0], code[1]);
+		 case AST_OP_NE:
+		 	return tac_createOperation(TAC_OP_NE, code[0], code[1]);
+		 case AST_OP_AND:
+		 	return tac_createOperation(TAC_OP_AND, code[0], code[1]);
+		 case AST_OP_OR:
+		 	return tac_createOperation(TAC_OP_OR, code[0], code[1]);
+		 case AST_ATRIBUICAO:
+		 case AST_ATRIBUICAO_VETOR:
+		 case AST_IF:
+		 case AST_IF_ELSE:
+		 case AST_WHILE:
+		 case AST_INPUT:
+		 case AST_LISTA_VARIAVEIS:
+		 case AST_OUTPUT:
+		 case AST_LISTA_ELEM_EXP:
+		 case AST_LISTA_ELEM_STRING:
+		 case AST_RETURN:
+		 case AST_KW_INT:
+		 	return createTacNode(TAC_KW_INT, syntaxtree->symbol, NULL, NULL);
+		 case AST_KW_BOOL:
+		 	return createTacNode(TAC_KW_BOOL, syntaxtree->symbol, NULL, NULL);
+		 case AST_KW_REAL:
+		 	return createTacNode(TAC_KW_REAL, syntaxtree->symbol, NULL, NULL);
+		 case AST_KW_CHAR:
+		 	return createTacNode(TAC_KW_CHAR, syntaxtree->symbol, NULL, NULL);
+		 case AST_LIT_INT:
+		 	return createTacNode(TAC_SYMBOL, syntaxtree->symbol, NULL, NULL);
+		 case AST_LIT_REAL:
+		 	return createTacNode(TAC_SYMBOL, syntaxtree->symbol, NULL, NULL);
+		 case AST_LIT_TRUE:
+		 	return createTacNode(TAC_SYMBOL, syntaxtree->symbol, NULL, NULL);
+		 case AST_LIT_FALSE:
+		 	return createTacNode(TAC_SYMBOL, syntaxtree->symbol, NULL, NULL);
+		 case AST_LIT_CHAR:
+		 	return createTacNode(TAC_SYMBOL, syntaxtree->symbol, NULL, NULL);
+		 case AST_LIT_STRING:
+		 	return createTacNode(TAC_SYMBOL, syntaxtree->symbol, NULL, NULL);
+		 case AST_IDENTIFIER:
+		 case AST_COMANDO_VAZIO:
+		 case AST_SYMBOL:
+		 case AST_SYMBOL_VAR:
+		 	return createTacNode(TAC_SYMBOL_VAR, syntaxtree->symbol, NULL, NULL);
+		 case AST_SYMBOL_VET:
+		 	return createTacNode(TAC_SYMBOL_VET, syntaxtree->symbol, NULL, NULL);
+		 case AST_SYMBOL_FUN:
+		 	break;
+		 default:
+		 	break;
+	}
 }
 
 TAC_NODE* revertTac(TAC_NODE* tac) {
@@ -43,7 +143,21 @@ TAC_NODE* revertTac(TAC_NODE* tac) {
 }
 
 TAC_NODE* tac_createOperation(int type, TAC_NODE* code0, TAC_NODE* code1) {
+	HASH_NODE* tempNode = makeTemp();
 
+	if (code0 != NULL) {
+		if (code1 != NULL) {
+			return joinTacs(joinTacs(code0, code1), createTacNode(type, tempNode, code0->result, code1->result));
+		} else {
+			return joinTacs(joinTacs(code0, code1), createTacNode(type, tempNode, code0->result, NULL));
+		}
+	} else {
+		if (code1 != NULL) {
+			return joinTacs(joinTacs(code0, code1), createTacNode(type, tempNode, NULL, code1->result));
+		} else {
+			return joinTacs(joinTacs(code0, code1), createTacNode(type, tempNode, NULL, NULL));
+		}
+	}
 }
 
 TAC_NODE* tac_createIfThen(TAC_NODE* code0, TAC_NODE* code1) {
@@ -95,12 +209,14 @@ void printTacNode(TAC_NODE* tac) {
 
 	switch(tac->type) {
 		case TAC_SYMBOL: fprintf(stderr, "TAC_SYMBOL "); break;
-		default: fprintf(stderr, "UNKNOWN %d", tac->type); break;
+		case TAC_DECLARACAO_VARIAVEL: fprintf(stderr, "TAC_DECLARACAO_VARIAVEL "); break;
+		case TAC_KW_INT: fprintf(stderr, "TAC_KW_INT "); break;
+		default: fprintf(stderr, "UNKNOWN %d ", tac->type); break;
 	}
 
-	if(tac->result)    fprintf(stderr, "res=[%s] ", tac->result->key)
-	if(tac->operator1) fprintf(stderr, "op1=[%s] ", tac->operator1->key);
-	if(tac->operator2) fprintf(stderr, "op2=[%s] ", tac->operator2->key);
+	if(tac->result)    fprintf(stderr, "res=[%s] ", tac->result->text);
+	if(tac->operator1) fprintf(stderr, "op1=[%s] ", tac->operator1->text);
+	if(tac->operator2) fprintf(stderr, "op2=[%s] ", tac->operator2->text);
 	fprintf(stderr, "\n");
 }
 

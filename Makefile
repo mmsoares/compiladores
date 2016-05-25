@@ -1,5 +1,5 @@
 etapa5: clean y.tab.o lex.yy.o main.o astree.o hash.o semantic.o tac.o
-	gcc -o etapa4 y.tab.o lex.yy.o main.o astree.o hash.o semantic.o tac.o -w
+	gcc -o etapa5 y.tab.o lex.yy.o main.o astree.o hash.o semantic.o tac.o -w
 main.o: main.c lex.yy.c
 	gcc -c main.c -w
 astree.o: astree.c
