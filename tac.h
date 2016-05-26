@@ -6,6 +6,10 @@
 
 #define TAC_DECLARACAO_VARIAVEL 1
 #define TAC_DECLARACAO_VETOR 2
+#define TAC_DECLARACAO_VETOR_VAZIO 3
+#define TAC_FUNCAO 4
+#define TAC_ATRIBUICAO 5
+#define TAC_VECTOR_ASSIGN 6
 
 #define TAC_KW_INT 20
 #define TAC_KW_BOOL 21
@@ -28,6 +32,7 @@
 
 #define TAC_SYMBOL_VAR 50
 #define TAC_SYMBOL_VET 51
+#define TAC_SYMBOL_FUN 52
 
 
 typedef struct tac_node {
@@ -42,6 +47,7 @@ typedef struct tac_node {
 TAC_NODE* createTacNode(int type, HASH_NODE* result, HASH_NODE* operation1, HASH_NODE* operation2);
 TAC_NODE* joinTacs(TAC_NODE* tac1, TAC_NODE* tac2);
 TAC_NODE* generateTacCode(ASTREE* syntaxtree);
+TAC_NODE* initializeVector(TAC_NODE* initializeList, HASH_NODE* vector, int i);
 TAC_NODE* revertTac(TAC_NODE* tac);
 TAC_NODE* tac_createOperation(int type, TAC_NODE* code0, TAC_NODE* code1);
 TAC_NODE* tac_createIfThen(TAC_NODE* code0, TAC_NODE* code1);
