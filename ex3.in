@@ -1,9 +1,7 @@
 int v[6]:1 2 3 4 5 6;
 
 int foo(int a, int b) {
-	a=1
-	a=2
-	a=3
+	a=v[5]
 };
 
 

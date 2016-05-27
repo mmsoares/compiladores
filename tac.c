@@ -25,12 +25,17 @@ TAC_NODE* joinTacs(TAC_NODE* tac1, TAC_NODE* tac2) {
 	return tac2;
 }
 
+TAC_NODE* createVectorRead(HASH_NODE* simbolo, TAC_NODE* indice) {
+	HASH_NODE* temp = makeTemp();
+
+	return joinTacs(createTacNode(TAC_VECTOR_READ, temp, simbolo, indice->result), indice);
+}
+
 TAC_NODE* createFunctionDeclaration(HASH_NODE* simbolo, TAC_NODE* listaParametros, TAC_NODE* listaComandos) {
 	listaParametros = joinTacs(createTacNode(TAC_COMECO_FUNCAO, simbolo, NULL, NULL), listaParametros);
 	listaComandos = joinTacs(listaParametros, listaComandos);
 	return joinTacs(listaComandos, createTacNode(TAC_FINAL_FUNCAO, simbolo, NULL, NULL));
 }
-
 
 TAC_NODE* generateTacCode(ASTREE* syntaxtree) {
 	int i;
@@ -63,7 +68,7 @@ TAC_NODE* generateTacCode(ASTREE* syntaxtree) {
 		 case AST_LISTA_LITERAIS:
 		 	return joinTacs(code[0], code[1]);
 		 case AST_FUNCAO:
-		 	return createFunctionDeclaration(syntaxtree->symbol, code[2], code[3]);
+		 	return createFunctionDeclaration(code[0]->result, code[2], code[3]);
 		 case AST_PARAMETRO:
 		 	return createTacNode(TAC_PARAMETRO, code[0]->result, code[1]->result, NULL);
 		 case AST_LISTA_PARAMETRO:
@@ -74,8 +79,10 @@ TAC_NODE* generateTacCode(ASTREE* syntaxtree) {
 		 	return code[0];
 		 case AST_LISTA_PARAM_CHAMADA:
 		 case AST_ACESSO_VETOR:
+		 	return createVectorRead(code[0]->result, code[1]);
 		 case AST_CHAMADA_FUNCAO:
 		 case AST_EXPRESSAO_PARENTESES:
+		 	return code[0];
 		 case AST_OP_SOMA:
 		 	return createTacOperation(TAC_OP_SOMA, code[0], code[1]);
 		 case AST_OP_SUB:
@@ -103,6 +110,7 @@ TAC_NODE* generateTacCode(ASTREE* syntaxtree) {
 		 case AST_ATRIBUICAO:
 		 	return joinTacs(createTacNode(TAC_ATRIBUICAO, code[0]->result, code[1]->result, NULL), code[1]);
 		 case AST_ATRIBUICAO_VETOR:
+		 	//return createAssignVector(syntaxtree->symbol, code[2], code[3]);
 		 case AST_IF:
 		 case AST_IF_ELSE:
 		 case AST_WHILE:
@@ -132,7 +140,6 @@ TAC_NODE* generateTacCode(ASTREE* syntaxtree) {
 		 	return createTacNode(TAC_SYMBOL, syntaxtree->symbol, NULL, NULL);
 		 case AST_LIT_STRING:
 		 	return createTacNode(TAC_SYMBOL, syntaxtree->symbol, NULL, NULL);
-		 case AST_IDENTIFIER:
 		 case AST_COMANDO_VAZIO:
 		 	return NULL;
 		 case AST_SYMBOL:
@@ -142,7 +149,6 @@ TAC_NODE* generateTacCode(ASTREE* syntaxtree) {
 		 	return createTacNode(TAC_SYMBOL_VET, syntaxtree->symbol, NULL, NULL);
 		 case AST_SYMBOL_FUN:
 		 	return createTacNode(TAC_SYMBOL_FUN, syntaxtree->symbol, NULL, NULL);
-		 	break;
 		 default:
 		 	break;
 	}
@@ -201,12 +207,20 @@ TAC_NODE* tac_createIfLoop(TAC_NODE* code0, TAC_NODE* code1) {
 
 }
 
-TAC_NODE* tac_createVectorInitialization(TAC_NODE* literal, TAC_NODE* next) {
-
-}
-
-TAC_NODE* tac_createAssignVector(HASH_NODE* symbol, TAC_NODE* index, TAC_NODE* attribute) {
-
+TAC_NODE* createAssignVector(HASH_NODE* simbolo, TAC_NODE* indice, TAC_NODE* valor) {
+	if (indice != NULL) {
+		if (valor != NULL) {
+			return joinTacs(joinTacs(indice, valor), createTacNode(TAC_VECTOR_WRITE, simbolo, indice->result, valor->result));
+		} else {
+			return joinTacs(joinTacs(indice, valor), createTacNode(TAC_VECTOR_WRITE, simbolo, indice->result, NULL));
+		}
+	} else {
+		if (valor != NULL) {
+			return joinTacs(joinTacs(indice, valor), createTacNode(TAC_VECTOR_WRITE, simbolo, NULL, valor->result));
+		} else {
+			return joinTacs(joinTacs(indice, valor), createTacNode(TAC_VECTOR_WRITE, simbolo, NULL, NULL));
+		}
+	}
 }
 
 TAC_NODE* tac_createVectorRead(HASH_NODE* symbol, TAC_NODE* index) {
@@ -242,6 +256,7 @@ void printTacNode(TAC_NODE* tac) {
 		case TAC_FINAL_FUNCAO: fprintf(stderr, "TAC_FINAL_FUNCAO "); break;
 		case TAC_ATRIBUICAO: fprintf(stderr, "TAC_ATRIBUICAO "); break;
 		case TAC_VECTOR_ASSIGN: fprintf(stderr, "TAC_VECTOR_ASSIGN "); break;
+		case TAC_VECTOR_READ: fprintf(stderr, "TAC_VECTOR_READ "); break;
 		case TAC_OP_SOMA: fprintf(stderr, "TAC_OP_SOMA "); break;
 		case TAC_KW_INT: fprintf(stderr, "TAC_KW_INT "); break;
 		case TAC_SYMBOL_VAR: fprintf(stderr, "TAC_SYMBOL_VAR "); break;
