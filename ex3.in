@@ -1,7 +1,10 @@
 int i:0;
 int foo() {
-	while(i>0){
+	if(i>0){
 		i= 1
+	}
+	else{
+		i=55
 	}
 	return 2
 };

@@ -18,9 +18,7 @@
 #define TAC_POP_PARAMETRO 12
 #define TAC_FUNCTION_CALL 13
 
-#define TAC_IF 14
-#define TAC_IF_ELSE 15
-#define TAC_WHILE 16
+#define TAC_IFZ 16
 #define TAC_JUMP 17
 #define TAC_LABEL 18
 

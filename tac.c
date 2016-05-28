@@ -27,7 +27,6 @@ TAC_NODE* joinTacs(TAC_NODE* tac1, TAC_NODE* tac2) {
 
 TAC_NODE* createVectorRead(HASH_NODE* simbolo, TAC_NODE* indice) {
 	HASH_NODE* temp = makeTemp();
-
 	return joinTacs(indice, createTacNode(TAC_VECTOR_READ, temp, simbolo, indice->result));
 }
 
@@ -75,7 +74,7 @@ TAC_NODE* createIF(TAC_NODE* code0, TAC_NODE* code1) {
 	HASH_NODE* label;
 	label = makeLabel();
 
-	return joinTacs(joinTacs(joinTacs(code0, createTacNode(TAC_IF, code0->result, label, NULL)), code1), createTacNode(TAC_LABEL, label, NULL, NULL));
+	return joinTacs(joinTacs(joinTacs(code0, createTacNode(TAC_IFZ, code0->result, label, NULL)), code1), createTacNode(TAC_LABEL, label, NULL, NULL));
 }
 
 TAC_NODE* createIF_ELSE(TAC_NODE* code0, TAC_NODE* code1, TAC_NODE* code2) {
@@ -85,7 +84,7 @@ TAC_NODE* createIF_ELSE(TAC_NODE* code0, TAC_NODE* code1, TAC_NODE* code2) {
 	HASH_NODE* labelEndIfElse;
 	labelEndIfElse = makeLabel();
 
-	TAC_NODE* ifBlock = joinTacs(joinTacs(joinTacs(code0, createTacNode(TAC_IF_ELSE, NULL, code0->result, labelElse)), code1),createTacNode(TAC_JUMP, labelEndIfElse, NULL, NULL));
+	TAC_NODE* ifBlock = joinTacs(joinTacs(joinTacs(code0, createTacNode(TAC_IFZ, NULL, code0->result, labelElse)), code1),createTacNode(TAC_JUMP, labelEndIfElse, NULL, NULL));
 
 	TAC_NODE* elseBlock = joinTacs(joinTacs(createTacNode(TAC_LABEL, labelElse, NULL, NULL), code2), createTacNode(TAC_LABEL, labelEndIfElse, NULL, NULL));
 
@@ -99,7 +98,7 @@ TAC_NODE* createWHILE(TAC_NODE* code0, TAC_NODE* code1) {
 	HASH_NODE* loopLabelEnd;
 	loopLabelEnd = makeLabel();
 
-	return joinTacs(joinTacs(joinTacs(joinTacs(joinTacs(createTacNode(TAC_LABEL, loopLabelBegin, NULL, NULL), code0), createTacNode(TAC_IF, NULL, loopLabelEnd, code0->result)), code1), createTacNode(TAC_JUMP, NULL, loopLabelBegin, NULL)), createTacNode(TAC_LABEL, loopLabelEnd, NULL, NULL));
+	return joinTacs(joinTacs(joinTacs(joinTacs(joinTacs(createTacNode(TAC_LABEL, loopLabelBegin, NULL, NULL), code0), createTacNode(TAC_IFZ, NULL, code0->result, loopLabelEnd)), code1), createTacNode(TAC_JUMP, NULL, loopLabelBegin, NULL)), createTacNode(TAC_LABEL, loopLabelEnd, NULL, NULL));
 
 }
 
@@ -324,11 +323,9 @@ void printTacNode(TAC_NODE* tac) {
 		case TAC_PUSH_PARAMETRO: fprintf(stderr, "TAC_PUSH_PARAMETRO "); break;
 		case TAC_POP_PARAMETRO: fprintf(stderr, "TAC_POP_PARAMETRO "); break;
 		case TAC_FUNCTION_CALL: fprintf(stderr, "TAC_FUNCTION_CALL "); break;
-		case TAC_IF: fprintf(stderr, "TAC_IF "); break;
-		case TAC_IF_ELSE: fprintf(stderr, "TAC_IF_ELSE "); break;
-		case TAC_WHILE: fprintf(stderr, "TAC_WHILE "); break;
 		case TAC_LABEL: fprintf(stderr, "TAC_LABEL "); break;
 		case TAC_JUMP: fprintf(stderr, "TAC_JUMP "); break;
+		case TAC_IFZ: fprintf(stderr, "TAC_IFZ "); break;
 		default: fprintf(stderr, "UNKNOWN %d ", tac->type); break;
 	}
 
