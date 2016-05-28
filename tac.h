@@ -4,19 +4,22 @@
 #include "hash.h"
 #include "astree.h"
 
-#define TAC_DECLARACAO_VARIAVEL 1
-#define TAC_DECLARACAO_VETOR 2
+#define TAC_DECLARACAO_VARIAVEL    1
+#define TAC_DECLARACAO_VETOR       2
 #define TAC_DECLARACAO_VETOR_VAZIO 3
-#define TAC_ATRIBUICAO 4
+
+#define TAC_ATRIBUICAO    4
 #define TAC_VECTOR_ASSIGN 5
-#define TAC_COMECO_FUNCAO 6
-#define TAC_FINAL_FUNCAO  7
-#define TAC_PARAMETRO 8
-#define TAC_VECTOR_READ 9
-#define TAC_RETURN 10
+#define TAC_VECTOR_READ   9
+
+#define TAC_COMECO_FUNCAO  6
+#define TAC_FINAL_FUNCAO   7
+#define TAC_PARAMETRO      8
 #define TAC_PUSH_PARAMETRO 11
-#define TAC_POP_PARAMETRO 12
-#define TAC_FUNCTION_CALL 13
+#define TAC_POP_PARAMETRO  12
+#define TAC_FUNCTION_CALL  13
+
+#define TAC_RETURN 10
 
 #define TAC_IFZ 16
 #define TAC_JUMP 17
@@ -26,6 +29,12 @@
 #define TAC_KW_BOOL 21
 #define TAC_KW_CHAR 22
 #define TAC_KW_REAL 23
+
+
+#define TAC_READ  24
+#define TAC_WRITE_STRING 25
+#define TAC_WRITE_VAR 26
+#define TAC_STRING 27
 
 #define TAC_SYMBOL 30
 #define TAC_OP_SOMA 31
@@ -71,6 +80,8 @@ TAC_NODE* resultAtribuicao(TAC_NODE* code);
 TAC_NODE* createIF(TAC_NODE* code0, TAC_NODE* code1);
 TAC_NODE* createIF_ELSE(TAC_NODE* code0, TAC_NODE* code1, TAC_NODE* code2);
 TAC_NODE* createWHILE(TAC_NODE* code0, TAC_NODE* code1);
+TAC_NODE* createInput(TAC_NODE* code);
+TAC_NODE* createOutput(TAC_NODE* code);
 
 void printTacNode(TAC_NODE* tac);
 void printTacList(TAC_NODE* tac);

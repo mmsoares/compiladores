@@ -25,7 +25,7 @@
 #define NATURE_FUNCAO    113
 #define NATURE_UNDEFINED 114
 
-#define HASH_SIZE 997
+#define HASH_SIZE 9977
 
 //definições da tabela hash e assinaturas de funções sobre essa estrutura
 

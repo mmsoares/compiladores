@@ -1,12 +1,19 @@
+int a:0;
 int i:0;
-int foo() {
-	if(i>0){
-		i= 1
-	}
-	else{
-		i=55
-	}
-	return 2
+int main() {
+  output "Digite um numero: "
+
+  input i
+
+  while (i<10) {
+ //   a = incn(a,1)
+    i = i + 1
+  }
+
+  output "Incrementado algumas vezes fica ",a,"\n"
+
+  if (a==1) {output "Parou no meio\n"}
 };
 
+int incn(int x, int y) ;;
 
