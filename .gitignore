@@ -1,0 +1,6 @@
+*.o
+*~
+etapa*
+lex.yy.*
+y.output
+y.tab.*
