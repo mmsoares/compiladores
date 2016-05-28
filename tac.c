@@ -28,7 +28,7 @@ TAC_NODE* joinTacs(TAC_NODE* tac1, TAC_NODE* tac2) {
 TAC_NODE* createVectorRead(HASH_NODE* simbolo, TAC_NODE* indice) {
 	HASH_NODE* temp = makeTemp();
 
-	return joinTacs(createTacNode(TAC_VECTOR_READ, temp, simbolo, indice->result), indice);
+	return joinTacs(indice, createTacNode(TAC_VECTOR_READ, temp, simbolo, indice->result));
 }
 
 TAC_NODE* createFunctionDeclaration(HASH_NODE* simbolo, TAC_NODE* listaParametros, TAC_NODE* listaComandos) {
@@ -108,7 +108,7 @@ TAC_NODE* generateTacCode(ASTREE* syntaxtree) {
 		 case AST_OP_OR:
 		 	return createTacOperation(TAC_OP_OR, code[0], code[1]);
 		 case AST_ATRIBUICAO:
-		 	return joinTacs(createTacNode(TAC_ATRIBUICAO, code[0]->result, code[1]->result, NULL), code[1]);
+		 	return joinTacs(code[1], createTacNode(TAC_ATRIBUICAO, code[0]->result, code[1]->result, NULL));
 		 case AST_ATRIBUICAO_VETOR:
 		 	//return createAssignVector(syntaxtree->symbol, code[2], code[3]);
 		 case AST_IF:
