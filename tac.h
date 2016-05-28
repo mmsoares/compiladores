@@ -18,6 +18,12 @@
 #define TAC_POP_PARAMETRO 12
 #define TAC_FUNCTION_CALL 13
 
+#define TAC_IF 14
+#define TAC_IF_ELSE 15
+#define TAC_WHILE 16
+#define TAC_JUMP 17
+#define TAC_LABEL 18
+
 #define TAC_KW_INT 20
 #define TAC_KW_BOOL 21
 #define TAC_KW_CHAR 22
@@ -64,10 +70,9 @@ TAC_NODE* createFunctionCall(HASH_NODE* result, TAC_NODE* code);
 
 TAC_NODE* resultAtribuicao(TAC_NODE* code);
 
-TAC_NODE* tac_createIfThen(TAC_NODE* code0, TAC_NODE* code1);
-TAC_NODE* tac_createIfElse(TAC_NODE* code0, TAC_NODE* code1);
-TAC_NODE* tac_createIfLoop(TAC_NODE* code0, TAC_NODE* code1);
-TAC_NODE* tac_createOutput(TAC_NODE* expression, TAC_NODE* next);
+TAC_NODE* createIF(TAC_NODE* code0, TAC_NODE* code1);
+TAC_NODE* createIF_ELSE(TAC_NODE* code0, TAC_NODE* code1, TAC_NODE* code2);
+TAC_NODE* createWHILE(TAC_NODE* code0, TAC_NODE* code1);
 
 void printTacNode(TAC_NODE* tac);
 void printTacList(TAC_NODE* tac);
