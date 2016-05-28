@@ -346,7 +346,6 @@ int getDominantType(int type1, int type2, int isDiv) {
 }
 
 void checkParameterCompatibility(int type1, int type2){
-	fprintf(stderr, "Checking compatibility between %d and %d\n", type1, type2);
 	if(type1 == DT_BOOL) {
 		if(type2 != DT_BOOL) {
 			fprintf(stderr, "Erro: tipos nao compativeis na chamada de funcao\n");
@@ -393,11 +392,6 @@ void checkFunctionParameters(ASTREE *node) {
 				}
 				ASTREE *declarationParam = declaration->son[2];
 				ASTREE *callParam = node->son[1];
-
-				asTreePrintNodeWithDirectChildren(declaration);
-				asTreePrintNodeWithDirectChildren(node);
-				//if(!callParam->son[0]) exit(4);
-				//checkParameterCompatibility(declarationParam->son[0]->dataType, callParam->son[0]->dataType);
 			}
 		}
 		//se a declaração não tem parametro

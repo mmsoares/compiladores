@@ -12,8 +12,11 @@
 #define TAC_COMECO_FUNCAO 6
 #define TAC_FINAL_FUNCAO  7
 #define TAC_PARAMETRO 8
-#define TAC_VECTOR_WRITE 9
-#define TAC_VECTOR_READ 10
+#define TAC_VECTOR_READ 9
+#define TAC_RETURN 10
+#define TAC_PUSH_PARAMETRO 11
+#define TAC_POP_PARAMETRO 12
+#define TAC_FUNCTION_CALL 13
 
 #define TAC_KW_INT 20
 #define TAC_KW_BOOL 21
@@ -57,14 +60,13 @@ TAC_NODE* createTacOperation(int type, TAC_NODE* code0, TAC_NODE* code1);
 TAC_NODE* createFunctionDeclaration(HASH_NODE* simbolo, TAC_NODE* listaParametros, TAC_NODE* listaComandos);
 TAC_NODE* createAssignVector(HASH_NODE* simbolo, TAC_NODE* indice, TAC_NODE* valor);
 TAC_NODE* createVectorRead(HASH_NODE* simbolo, TAC_NODE* indice);
+TAC_NODE* createFunctionCall(HASH_NODE* result, TAC_NODE* code);
+
+TAC_NODE* resultAtribuicao(TAC_NODE* code);
 
 TAC_NODE* tac_createIfThen(TAC_NODE* code0, TAC_NODE* code1);
 TAC_NODE* tac_createIfElse(TAC_NODE* code0, TAC_NODE* code1);
 TAC_NODE* tac_createIfLoop(TAC_NODE* code0, TAC_NODE* code1);
-TAC_NODE* tac_createVectorInitialization(TAC_NODE* literal, TAC_NODE* next);
-TAC_NODE* tac_createFunctionParameters(HASH_NODE* symbol, TAC_NODE* next);
-TAC_NODE* tac_createFunctionCall(HASH_NODE* symbol, TAC_NODE* params);
-TAC_NODE* tac_createFunctionArguments(HASH_NODE* symbol, TAC_NODE* expression, TAC_NODE* next);
 TAC_NODE* tac_createOutput(TAC_NODE* expression, TAC_NODE* next);
 
 void printTacNode(TAC_NODE* tac);
