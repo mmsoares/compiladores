@@ -110,7 +110,7 @@ TAC_NODE* generateTacCode(ASTREE* syntaxtree) {
 		 case AST_ATRIBUICAO:
 		 	return joinTacs(code[1], createTacNode(TAC_ATRIBUICAO, code[0]->result, code[1]->result, NULL));
 		 case AST_ATRIBUICAO_VETOR:
-		 	//return createAssignVector(syntaxtree->symbol, code[2], code[3]);
+		 	return createAssignVector(code[0]->result, code[1], code[2]);
 		 case AST_IF:
 		 case AST_IF_ELSE:
 		 case AST_WHILE:
@@ -210,15 +210,15 @@ TAC_NODE* tac_createIfLoop(TAC_NODE* code0, TAC_NODE* code1) {
 TAC_NODE* createAssignVector(HASH_NODE* simbolo, TAC_NODE* indice, TAC_NODE* valor) {
 	if (indice != NULL) {
 		if (valor != NULL) {
-			return joinTacs(joinTacs(indice, valor), createTacNode(TAC_VECTOR_WRITE, simbolo, indice->result, valor->result));
+			return joinTacs(joinTacs(indice, valor), createTacNode(TAC_VECTOR_ASSIGN, simbolo, indice->result, valor->result));
 		} else {
-			return joinTacs(joinTacs(indice, valor), createTacNode(TAC_VECTOR_WRITE, simbolo, indice->result, NULL));
+			return joinTacs(joinTacs(indice, valor), createTacNode(TAC_VECTOR_ASSIGN, simbolo, indice->result, NULL));
 		}
 	} else {
 		if (valor != NULL) {
-			return joinTacs(joinTacs(indice, valor), createTacNode(TAC_VECTOR_WRITE, simbolo, NULL, valor->result));
+			return joinTacs(joinTacs(indice, valor), createTacNode(TAC_VECTOR_ASSIGN, simbolo, NULL, valor->result));
 		} else {
-			return joinTacs(joinTacs(indice, valor), createTacNode(TAC_VECTOR_WRITE, simbolo, NULL, NULL));
+			return joinTacs(joinTacs(indice, valor), createTacNode(TAC_VECTOR_ASSIGN, simbolo, NULL, NULL));
 		}
 	}
 }
