@@ -45,7 +45,8 @@ return return KW_RETURN;
   //caractere
   char stringHelper[strlen(yytext)];
   strcpy(stringHelper, yytext);   //usada para não modificar o valor de yytext pois isso pode gerar erros na leitura dos próximos simbolos
-  char* unquotedString = removeQuotes(stringHelper);       //remove as aspas no começo e no fim do caracter
+  char *unquotedString = (char *) malloc(strlen(yytext) * sizeof(char));
+  strcpy(unquotedString, removeQuotes(stringHelper));
 
   yylval.symbol = hashInsert(unquotedString, SYMBOL_LIT_CHAR);   //insere na tabela de simbolos
   return LIT_CHAR;
@@ -55,8 +56,9 @@ return return KW_RETURN;
   //string
   char stringHelper[strlen(yytext)];
   strcpy(stringHelper, yytext);  //usada para não modificar o valor de yytext pois isso pode gerar erros na leitura dos próximos simbolos
-  char* unquotedString = removeQuotes(stringHelper);     //remove as aspas no começo e no fim da string
-
+  char *unquotedString = (char *) malloc(strlen(yytext) * sizeof(char));
+  strcpy(unquotedString, removeQuotes(stringHelper));
+  
   yylval.symbol = hashInsert(unquotedString, SYMBOL_LIT_STRING);  //insere na tabela de simbolos
   return LIT_STRING;
 }
@@ -95,11 +97,10 @@ TRUE {
 %%
 //rotina que remove o primeiro e o último caracter de uma string - usada para remover as aspas de strings e caracteres
 char *removeQuotes(char *string){
-  char *p = string;
-  p++; //incrementa o ponteiro para remover o primeiro caracter
-  p[strlen(p)-1] = '\0';   //muda o valor do ultimo caracter pra \0, que é indicativo de final de palavra, assim efetivamente removendo o último caracter
+  string++; //incrementa o ponteiro para remover o primeiro caracter
+  string[strlen(string)-1] = '\0';   //muda o valor do ultimo caracter pra \0, que é indicativo de final de palavra, assim efetivamente removendo o último caracter
 
-  return p;
+  return string;
 }
 
 int isRunning(void){
