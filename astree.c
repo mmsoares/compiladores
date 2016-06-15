@@ -8,14 +8,13 @@ extern  FILE    *outputFile;
 
 ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *son0, ASTREE *son1, ASTREE *son2, ASTREE *son3) {
 	ASTREE *newnode = 0;
-	newnode = (ASTREE*) calloc(1,sizeof(ASTREE));
+	newnode = calloc(1,sizeof(struct astree_struct));
 	newnode->symbol = symbol;
 	newnode->type = type;
 	newnode->son[0] = son0;
 	newnode->son[1] = son1;
 	newnode->son[2] = son2;
 	newnode->son[3] = son3;
-
 
 	return newnode;
 }
@@ -85,7 +84,7 @@ void astreePrint(ASTREE* node, int level) {
 				 break;
 	}
 	if(node->symbol) {
-		fprintf(stderr, ",%s", node->symbol->text);
+		fprintf(stderr, ",%s", node->symbol?node->symbol->text:" ");
 	}
 	fprintf(stderr, "\n");
 	
@@ -383,6 +382,287 @@ void decompile(ASTREE *raiz) {
 				break;
 			default:		 
 				fprintf(stderr,"Fim da execucao do Decompile!"); 
+				break;      
+	    }
+    }
+
+}
+
+void freeAstreeMemory(ASTREE *raiz) {
+	
+	if (raiz !=0)
+	{
+	    switch(raiz->type)
+	    {	
+			case AST_PROGRAMA:	
+				freeAstreeMemory(raiz->son[0]);
+				free(raiz);
+				break;
+
+			case AST_DECLARACOES:
+				freeAstreeMemory(raiz->son[0]);
+				freeAstreeMemory(raiz->son[1]);
+				free(raiz);
+				break;
+		
+			case AST_VARIAVEL:	
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]);
+            free(raiz);
+				break;
+					
+			case AST_VETOR_VAZIO:	
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]);
+            free(raiz);
+				break;				
+			
+			case AST_VETOR:		
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]);
+            freeAstreeMemory(raiz->son[2]); 
+            free(raiz);			
+				break;				
+			
+			case AST_INI_VETOR: 	 
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]);
+            free(raiz);
+				break;
+
+			case AST_LISTA_LITERAIS:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+			
+			case AST_FUNCAO:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]);
+            freeAstreeMemory(raiz->son[2]); 
+            free(raiz);
+				break;
+
+			case AST_PARAMETRO:
+				freeAstreeMemory(raiz->son[0]); 
+            free(raiz);
+				break;
+
+			case AST_LISTA_PARAMETRO:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_COMANDOS:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]);
+            free(raiz);
+				break;
+			
+			case AST_COMANDO_VAZIO: 
+            free(raiz);
+				break;
+				
+			case AST_BLOCO:
+				freeAstreeMemory(raiz->son[0]);
+            free(raiz);
+				break;
+			
+			case AST_LISTA_PARAM_CHAMADA:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]);
+            free(raiz);
+				break;
+			
+			case AST_ACESSO_VETOR:
+				freeAstreeMemory(raiz->son[0]); 
+            free(raiz);
+				break;
+			
+			case AST_CHAMADA_FUNCAO:
+				freeAstreeMemory(raiz->son[0]); 
+            free(raiz);
+				break;
+
+			case AST_OP_SOMA:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_OP_SUB:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_OP_MUL:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_OP_DIV:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_OP_MENOR:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_OP_MAIOR:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_OP_LE:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_OP_GE:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_OP_EQ:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_OP_NE:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_OP_AND:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_OP_OR:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+			
+			case AST_ATRIBUICAO:
+				freeAstreeMemory(raiz->son[0]); 
+            free(raiz);
+				break;
+
+			case AST_ATRIBUICAO_VETOR:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+			
+			case AST_IF:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_IF_ELSE:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]);
+            freeAstreeMemory(raiz->son[2]);
+            free(raiz);
+				break;
+
+			case AST_WHILE:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_INPUT:
+				freeAstreeMemory(raiz->son[0]);
+            free(raiz);
+				break;
+
+			case AST_LISTA_VARIAVEIS:
+				freeAstreeMemory(raiz->son[0]); 
+            free(raiz);
+				break;
+			
+			case AST_OUTPUT:
+				freeAstreeMemory(raiz->son[0]); 
+            free(raiz);
+				break;
+
+			case AST_LISTA_ELEM_EXP:
+				freeAstreeMemory(raiz->son[0]);			
+            freeAstreeMemory(raiz->son[1]); 
+            free(raiz);
+				break;
+
+			case AST_LISTA_ELEM_STRING:
+				freeAstreeMemory(raiz->son[0]); 
+            free(raiz);
+				break;
+
+			case AST_RETURN:
+				freeAstreeMemory(raiz->son[0]); 
+            free(raiz);
+				break;
+
+			case AST_KW_BOOL:
+				free(raiz);
+				break;
+
+			case AST_KW_REAL:
+				free(raiz);
+				break;
+
+			case AST_KW_CHAR:
+				free(raiz);
+				break;
+
+			case AST_KW_INT:
+				free(raiz);
+				break;
+
+			case AST_LIT_INT:
+				free(raiz);
+				break;
+
+			case AST_LIT_REAL:
+				free(raiz);
+				break;
+
+			case AST_LIT_TRUE:
+				free(raiz);
+				break;
+
+			case AST_LIT_FALSE:
+				free(raiz);
+				break;
+
+			case AST_LIT_CHAR:
+				free(raiz);
+				break;
+
+			case AST_LIT_STRING:
+				free(raiz);
+				break;
+
+			case AST_IDENTIFIER:
+				free(raiz);
+				break;
+			default:		 
+				fprintf(stderr,"Liberada a memória alocada!"); 
 				break;      
 	    }
     }

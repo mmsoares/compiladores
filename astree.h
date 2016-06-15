@@ -70,5 +70,6 @@ FILE    *outputFile;
 ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *s0, ASTREE *s1, ASTREE *s2, ASTREE *s3);
 void    astreePrint(ASTREE* node, int level);
 void    decompile(ASTREE *root);
+void 	  freeAstreeMemory(ASTREE *root);
 
 #endif

@@ -96,6 +96,7 @@ programa: declaracoes     {
             $$ = astreeCreate(AST_PROGRAMA,0,$1,0,0,0);
             astreePrint ($$,0);
             decompile($$);
+            freeAstreeMemory($$);
               }
          |            {  $$=astreeCreate(AST_PROGRAMA,0,0,0,0,0); }
          ;
