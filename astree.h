@@ -56,18 +56,24 @@
 #define AST_IDENTIFIER      148
 #define AST_DECLARACOES     149
 #define AST_COMANDO_VAZIO 150
+#define AST_SYMBOL 283
+#define AST_SYMBOL_VAR  300
+#define AST_SYMBOL_VET  301
+#define AST_SYMBOL_FUN  302
 
 
 typedef struct astree_struct {
     int type;
-    HASH_NODE* symbol;
+    int dataType;
+    struct hash_node_struct* symbol;
     struct astree_struct *son[MAX_SONS];
 } ASTREE;
 
-FILE    *inputFile;
-FILE    *outputFile;
-
-ASTREE* astreeCreate(int type, HASH_NODE *symbol, ASTREE *s0, ASTREE *s1, ASTREE *s2, ASTREE *s3);
+ASTREE* astreeCreate(int type, struct hash_node_struct *symbol, ASTREE *s0, ASTREE *s1, ASTREE *s2, ASTREE *s3);
+void    defineHashDataType(struct hash_node_struct *symbol, int type, ASTREE *declaration);
+void    printDataType(ASTREE *node);
+void    printNode(ASTREE *node, int level);
+void    asTreePrintNodeWithDirectChildren(ASTREE* node);
 void    astreePrint(ASTREE* node, int level);
 void    decompile(ASTREE *root);
 void 	  freeAstreeMemory(ASTREE *root);

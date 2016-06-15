@@ -1,17 +1,15 @@
-/* begin standard C headers. */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "hash.h"
 
-//implementação das funções como visto em aula
-
-
+int labelCounter = 0;
+int tempCounter = 0;
 
 void hashInit(void){
 	int i;
 	for(i=0;i<HASH_SIZE;++i)
-		Table[i] = 0;
+		Table[i] = NULL;
 }
 
 int hashAddress(char *text){
@@ -23,13 +21,16 @@ int hashAddress(char *text){
 }
 
 HASH_NODE *hashFind(char *text){
-	int i = 0;
-	HASH_NODE *node;
 	int address = hashAddress(text);
-	for(node = Table[i]; node; node->next)
-		if(strcmp(node->text,text))
+	HASH_NODE *node;
+
+	for(node = Table[address]; node; node->next){
+		if(strcmp(node->text,text)==0){
 			return node;
-	return 0;
+		}
+	}
+
+	return NULL;
 }
 
 HASH_NODE *hashInsert(char *text, int type){
@@ -42,6 +43,8 @@ HASH_NODE *hashInsert(char *text, int type){
 	newnode->type = type;
 	newnode->text = calloc(strlen(text)+1,sizeof(char));
 	strcpy(newnode->text,text);
+	newnode->dataType = DT_NOT_SET;
+	newnode->nature = NATURE_UNDEFINED;
 	newnode->next = Table[address];
 	Table[address] = newnode;
 
@@ -54,6 +57,18 @@ void hashPrint(void){
 	HASH_NODE *node = 0;
 	for(i=0;i<HASH_SIZE;i++)
 		for(node = Table[i];node;node = node->next)
-			printf("Table[%d] = type: %d, value: %s\n",i,node->type, node->text);
+			printf("Table[%d] = type: %d, value: %s, dataType: %d, nature: %d\n",i,node->type, node->text, node->dataType, node->nature);
 	
+}
+
+HASH_NODE* makeLabel() {
+	char label[256];
+	sprintf(label, "_label%d", labelCounter++);
+	return hashInsert(label, SYMBOL_LABEL);
+}
+
+HASH_NODE* makeTemp() {
+	char temp[256];
+	sprintf(temp, "_temp%d", tempCounter++);
+	return hashInsert(temp, SYMBOL_TEMP);
 }

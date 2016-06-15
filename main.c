@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "astree.h"
 #include "hash.h"
+#include "semantic.h"
 #include "y.tab.h"
 #include "lex.yy.h"
  
@@ -21,12 +22,9 @@ int main(int argc, char **argv)
 	if ((yyin = fopen(argv[1], "r"))==0)
 	{
 		fprintf(stderr, "ERRO! Nao foi possivel abrir este arquivo.\n");
-		exit (1);
+		exit (2);
 	}
-	outputFile = fopen(argv[2], "w");
 	yyparse();
-   	hashPrint();
 
-	fclose(outputFile);
 	return 0;
 }
