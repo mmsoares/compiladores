@@ -76,5 +76,6 @@ void    printNode(ASTREE *node, int level);
 void    asTreePrintNodeWithDirectChildren(ASTREE* node);
 void    astreePrint(ASTREE* node, int level);
 void    decompile(ASTREE *root);
+void 	  freeAstreeMemory(ASTREE *root);
 
 #endif

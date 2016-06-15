@@ -25,5 +25,6 @@ int main(int argc, char **argv)
 		exit (2);
 	}
 	yyparse();
+
 	return 0;
 }

@@ -36,11 +36,10 @@ HASH_NODE *hashFind(char *text){
 HASH_NODE *hashInsert(char *text, int type){
 
 	HASH_NODE *newnode;
-	if(hashFind(text)!= NULL){
-		return hashFind(text);
-	}
+	if(newnode = hashFind(text))
+		return newnode;
 	int address = hashAddress(text);
-	newnode = (HASH_NODE *) calloc(1,sizeof(HASH_NODE));
+	newnode = calloc(1,sizeof(struct hash_node_struct));
 	newnode->type = type;
 	newnode->text = calloc(strlen(text)+1,sizeof(char));
 	strcpy(newnode->text,text);

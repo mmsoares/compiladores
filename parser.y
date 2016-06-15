@@ -53,10 +53,6 @@ int yydebug = 1;
 %nonassoc '!' '$' '&'
 
 
-
-
-
-
 %type <ast> programa
 %type <ast> declaracoes
 %type <ast> declaracao
@@ -102,6 +98,7 @@ programa: declaracoes     {
             //decompile($$);
             performSemanticValidations(Table, $$);
             printTacListReverse(generateTacCode($$));
+            freeAstreeMemory($$);
               }
          |            {  $$=astreeCreate(AST_PROGRAMA,0,0,0,0,0); }
          ;
