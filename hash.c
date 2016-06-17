@@ -61,6 +61,22 @@ void hashPrint(void){
 	
 }
 
+void hashFree(void) {
+	int i;
+	HASH_NODE *aux = 0;
+	HASH_NODE *aux2 = 0;
+
+	for(i=0;i<HASH_SIZE; i++) {
+		aux = Table[i];
+
+		while(aux != NULL) {
+			aux2 = aux->next;
+			free(aux);
+			aux = aux2;
+		}
+	}
+}
+
 HASH_NODE* makeLabel() {
 	char label[256];
 	sprintf(label, "_label%d", labelCounter++);

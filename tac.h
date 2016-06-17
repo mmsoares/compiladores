@@ -87,4 +87,6 @@ void printTacNode(TAC_NODE* tac);
 void printTacList(TAC_NODE* tac);
 void printTacListReverse(TAC_NODE* tac);
 
+void freeTacs(TAC_NODE* tacs);
+
 #endif

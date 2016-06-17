@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 TAC_NODE* createTacNode(int type, HASH_NODE* result, HASH_NODE* operation1, HASH_NODE* operation2) {
-	TAC_NODE* node = 0;
-	node = (TAC_NODE*) calloc(1, sizeof(TAC_NODE));
+	TAC_NODE* node;
+	node = calloc(1, sizeof(TAC_NODE));
 	node->type = type;
 	node->result = result;
 	node->operator1 = operation1;
@@ -169,10 +169,10 @@ TAC_NODE* createFunctionDeclaration(HASH_NODE* simbolo, TAC_NODE* listaParametro
 }
 
 TAC_NODE* createFunctionCall(HASH_NODE* result, TAC_NODE* code) {
-	TAC_NODE* aux;
-	TAC_NODE* list;
-	TAC_NODE* push;
-	TAC_NODE* pop;
+	TAC_NODE* aux = NULL;
+	TAC_NODE* list = NULL;
+	TAC_NODE* push = NULL;
+	TAC_NODE* pop = NULL;
 
 	for(aux=revertTac(code);aux;aux=aux->next) {
 		pop = createTacNode(TAC_POP_PARAMETRO, aux->result, NULL, NULL);
@@ -371,4 +371,19 @@ void printTacListReverse(TAC_NODE* tac) {
 		printTacListReverse(tac->previous);
 		printTacNode(tac);
 	}
+}
+
+void freeTacs(TAC_NODE* tacs) {
+	TAC_NODE* aux = 0;
+	TAC_NODE* aux2 = 0;
+
+	aux = tacs;
+
+	while(aux) {
+		aux2 = aux;
+		aux = aux->previous;
+		free(aux2);
+	}
+
+	tacs = NULL;
 }

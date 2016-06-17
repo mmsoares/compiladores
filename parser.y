@@ -4,6 +4,7 @@
 #include "hash.h"
 #include "astree.h"
 #include "semantic.h"
+#include "tac.h"
 
 #define YYDEBUG 0
 int yydebug = 1;
@@ -94,11 +95,15 @@ int yydebug = 1;
 
 programa: declaracoes     { 
             $$ = astreeCreate(AST_PROGRAMA,0,$1,0,0,0);
-            astreePrint ($$,0);
+            //astreePrint ($$,0);
             //decompile($$);
             performSemanticValidations(Table, $$);
-            printTacListReverse(generateTacCode($$));
+
+            TAC_NODE* tacs = generateTacCode($$);
+            printTacListReverse(tacs);
+            hashFree();
             freeAstreeMemory($$);
+            freeTacs(tacs);
               }
          |            {  $$=astreeCreate(AST_PROGRAMA,0,0,0,0,0); }
          ;
