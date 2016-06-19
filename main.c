@@ -5,7 +5,8 @@
 #include "semantic.h"
 #include "y.tab.h"
 #include "lex.yy.h"
- 
+#include "assembler.h"
+
 extern int isRunning();
 extern int getLineNumber();
 extern void initMe();
@@ -24,7 +25,10 @@ int main(int argc, char **argv)
 		fprintf(stderr, "ERRO! Nao foi possivel abrir este arquivo.\n");
 		exit (2);
 	}
+
+	outputFile = fopen(argv[2],"w");
 	yyparse();
+	fclose(outputFile);
 
 	return 0;
 }

@@ -1,0 +1,14 @@
+.data
+	.globl	a
+	.type a, @object
+	.size a, 4
+a:
+	.long	1
+	.globl	b
+	.type b, @object
+	.size b, 4
+b:
+	.long	2
+.text
+	movl b(%rip), %eax
+	movl %eax, a(%rip)

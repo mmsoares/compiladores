@@ -5,7 +5,7 @@
 #include "astree.h"
 #include "semantic.h"
 #include "tac.h"
-
+#include "assembler.h"
 #define YYDEBUG 0
 int yydebug = 1;
 %}
@@ -101,6 +101,7 @@ programa: declaracoes     {
 
             TAC_NODE* tacs = generateTacCode($$);
             printTacListReverse(tacs);
+	    			generateAssembler(revertTac(tacs));
             hashFree();
             freeAstreeMemory($$);
             freeTacs(tacs);

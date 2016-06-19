@@ -1,0 +1,6 @@
+int a:0;
+
+int main()
+	a=f(1, main());
+
+int f(int kk, int aaaa);;

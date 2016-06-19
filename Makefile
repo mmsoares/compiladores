@@ -1,5 +1,5 @@
-etapa5: clean y.tab.o lex.yy.o main.o astree.o hash.o semantic.o tac.o
-	gcc -o etapa5 y.tab.o lex.yy.o main.o astree.o hash.o semantic.o tac.o -w
+etapa6: clean y.tab.o lex.yy.o main.o astree.o hash.o semantic.o tac.o assembler.o
+	gcc -o etapa6 y.tab.o lex.yy.o main.o astree.o hash.o semantic.o tac.o assembler.o -w
 main.o: main.c lex.yy.c
 	gcc -c main.c -w
 astree.o: astree.c
@@ -10,6 +10,8 @@ semantic.o: semantic.c
 	gcc -c semantic.c -w
 tac.o: tac.c
 	gcc -c tac.c -w
+assembler.o: assembler.c
+	gcc -c assembler.c
 lex.yy.o: lex.yy.c
 	gcc -c lex.yy.c -w
 lex.yy.c: scanner.l
@@ -21,4 +23,4 @@ y.tab.c: y.tab.h
 y.tab.h: parser.y
 	yacc -d -v parser.y
 clean:
-	rm -rf *.o lex.yy.* y.tab.* y.output etapa5 *~
+	rm -rf *.o lex.yy.* y.tab.* y.output etapa6 *~
